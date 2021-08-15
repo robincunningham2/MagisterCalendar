@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/robincunningham2/MagisterCalendar#readme",
   "dependencies": {
-    "axios": "^0.21.1"
+    "axios": "^0.21.1",
+    "tough-cookie": "^4.0.0"
   }
 }
