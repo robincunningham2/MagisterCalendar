@@ -1,0 +1,19 @@
+{
+  "name": "magistercalendar",
+  "version": "1.0.0",
+  "description": "Intergrate Magister with Google Calendar.",
+  "main": "src/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/robincunningham2/MagisterCalendar.git"
+  },
+  "author": "Robin Cunningham",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/robincunningham2/MagisterCalendar/issues"
+  },
+  "homepage": "https://github.com/robincunningham2/MagisterCalendar#readme"
+}
