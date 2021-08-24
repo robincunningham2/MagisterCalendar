@@ -86,7 +86,7 @@ class Magister {
     }
 
     async get(path) {
-        if (!this._accessToken) throw new MagisterError('Not logged into magister. Try client.log() first', '02');
+        if (!this._accessToken) throw new MagisterError('Not logged into magister. Try client.login() first', '02');
         return await got(`https://${this.hostname}/api${path}`, {
             cookieJar: this._cookieJar,
             headers: { authorization: `Bearer ${this._accessToken}` }
