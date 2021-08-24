@@ -36,14 +36,14 @@ class Magister {
 
     _generateQuery() {
         return {
-			client_id: `M6-${this.hostname}`,
-			redirect_uri: `https://${this.hostname}/oidc/redirect_callback.html`,
-			response_type: 'id_token token',
-			scope: 'openid profile',
-			acr_values: `tenant:${this.hostname}`,
-			state: '0'.repeat(32),
-			nonce: '0'.repeat(32),
-		};
+            client_id: `M6-${this.hostname}`,
+            redirect_uri: `https://${this.hostname}/oidc/redirect_callback.html`,
+            response_type: 'id_token token',
+            scope: 'openid profile',
+            acr_values: `tenant:${this.hostname}`,
+            state: '0'.repeat(32),
+            nonce: '0'.repeat(32),
+        };
     }
 
     async _submitChallenge(name, optionalData = {}) {
@@ -82,15 +82,15 @@ class Magister {
             { cookieJar: this._cookieJar }
         );
 
-		this._sessionId = String(url.parse(response.url, true).query.sessionId);
+        this._sessionId = String(url.parse(response.url, true).query.sessionId);
     }
 
     async get(path) {
         if (!this._accessToken) throw new MagisterError('Not logged into magister. Try client.log() first', '02');
         return await got(`https://${this.hostname}/api${path}`, {
-			cookieJar: this._cookieJar,
-			headers: { authorization: `Bearer ${this._accessToken}` }
-		}).json();
+            cookieJar: this._cookieJar,
+            headers: { authorization: `Bearer ${this._accessToken}` }
+        }).json();
     }
 
     async login() {
@@ -106,21 +106,24 @@ class Magister {
         if (!response.redirectURL) {
             console.log(response.error);
             throw new MagisterError('No redirect URL received. Most likely the credentials are incorrect.', '01');
-		}
+        }
 
         let redirectResponse = await got(`https://accounts.magister.net${response.redirectURL}`, {
             cookieJar: this._cookieJar,
-			throwHttpErrors: false,
-			followRedirect: false
+            throwHttpErrors: false,
+            followRedirect: false
         });
 
         let { hash } = url.parse(redirectResponse.headers.location, true);
 
         this._accessToken = hash.split('&').reduce((acc, curr) => {
-			let v = curr.split('=');
-			acc[v[0]] = v[1];
-			return acc;
-		}, {}).access_token;
+            let v = curr.split('=');
+            acc[v[0]] = v[1];
+            return acc;
+        }, {}).access_token;
+
+        let account = await this.get('/account?noCache=0');
+        this.me = account.Persoon;
     }
 }
 
