@@ -101,7 +101,7 @@ class Magister {
         let response = await this._submitChallenge('password', { password: this.password });
 
         // Hide the password
-        this.password = '[redacted]';
+        this.password = 'Am0gus';
 
         if (!response.redirectURL) {
             console.log(response.error);
