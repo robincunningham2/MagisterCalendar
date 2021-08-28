@@ -11,3 +11,10 @@ node_modules/
 env
 .env
 *.env
+
+# Temp files
+.tmp/
+
+# Credentials
+config/credentials.json
+config/old-credentials.json
