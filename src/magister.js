@@ -1,6 +1,6 @@
 // A more readable, better (, and possibly faster) version of https://www.npmjs.com/package/magister.
 
-const got = require('got');
+const got = require('got').default;
 const url = require('url');
 const { CookieJar } = require('tough-cookie');
 
