@@ -93,6 +93,42 @@ class Magister {
         }).json();
     }
 
+    async post(path, data={}) {
+        if (!this._accessToken) throw new MagisterError('Not logged into magister. Try client.login() first', '02');
+        return await got.post(`https://${this.hostname}/api${path}`, {
+            cookieJar: this._cookieJar,
+            headers: { authorization: `Bearer ${this._accessToken}` },
+            json: data
+        }).json();
+    }
+
+    async put(path, data={}) {
+        if (!this._accessToken) throw new MagisterError('Not logged into magister. Try client.login() first', '02');
+        return await got.put(`https://${this.hostname}/api${path}`, {
+            cookieJar: this._cookieJar,
+            headers: { authorization: `Bearer ${this._accessToken}` },
+            json: data
+        }).json();
+    }
+
+    async patch(path, data={}) {
+        if (!this._accessToken) throw new MagisterError('Not logged into magister. Try client.login() first', '02');
+        return await got.patch(`https://${this.hostname}/api${path}`, {
+            cookieJar: this._cookieJar,
+            headers: { authorization: `Bearer ${this._accessToken}` },
+            json: data
+        }).json();
+    }
+
+    async delete(path, data={}) {
+        if (!this._accessToken) throw new MagisterError('Not logged into magister. Try client.login() first', '02');
+        return await got.delete(`https://${this.hostname}/api${path}`, {
+            cookieJar: this._cookieJar,
+            headers: { authorization: `Bearer ${this._accessToken}` },
+            json: data
+        }).json();
+    }
+
     async login() {
         await this._initCookies();
 
