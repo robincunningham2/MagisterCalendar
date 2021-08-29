@@ -21,6 +21,7 @@
   "homepage": "https://github.com/robincunningham2/MagisterCalendar#readme",
   "dependencies": {
     "dotenv": "^10.0.0",
+    "express": "^4.17.1",
     "googleapis": "^84.0.0",
     "got": "^11.8.2",
     "tough-cookie": "^4.0.0",
