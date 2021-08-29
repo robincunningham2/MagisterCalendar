@@ -1,7 +1,4 @@
 const Config = require('../config/index');
-
-const fs = require('fs');
-const readline = require('readline');
 const { google } = require('googleapis');
 
 class GoogleCalendar {
@@ -11,34 +8,31 @@ class GoogleCalendar {
         this.calendar = null;
     }
 
-    _saveToken() {
-        const url = this.client.generateAuthUrl({
-            access_type: 'offline',
-            scope: this.scopes,
-        });
-
-        console.log(`Authenticate via this URl: ${url}`);
-        const rl = readline.createInterface({
-            input: process.stdin,
-            output: process.stdout,
-        });
-
-        return new Promise((resolve, reject) => {
-            rl.question('Enter the code from the page: ', (code) => {
-                rl.close();
-
-                this.client.getToken(code, (err, token) => {
-                    if (err) return reject(err);
-                    this.client.setCredentials(token);
-
-                    fs.writeFileSync('./.tmp/token.json', JSON.stringify(token));
-                    resolve(this);
-                });
-            });
-        });
+    _generateEventOptions(appointment) {
+        return {
+            auth: this.client,
+            calendarId: Config.googleapis.defaultCalendar,
+            resource: {
+                summary: `${appointment.Vakken[0].Naam} - ${appointment.Docenten[0].Docentcode}`,
+                location: appointment.Lokatie,
+                description: appointment.Inhoud || '<i>Geen inhoud</i>',
+                // colorId: color || 7,
+                start: {
+                    dateTime: new Date(Number(new Date(appointment.Start)) + 7_200_000).toISOString().slice(0, -5),
+                    timeZone: Config.googleapis.timeZone
+                },
+                end: {
+                    dateTime: new Date(Number(new Date(appointment.Einde)) + 7_200_000).toISOString().slice(0, -5),
+                    timeZone: Config.googleapis.timeZone
+                },
+                reminders: {
+                    useDefault: false
+                }
+            }
+        };
     }
 
-    async authorize() {
+    async authorize(callback, token = null) {
         const creds = require('../config/credentials.json');
         this.client = new google.auth.OAuth2(
             creds.installed.client_id,
@@ -46,38 +40,34 @@ class GoogleCalendar {
             creds.installed.redirect_uris[0]
         );
 
-        if (!fs.existsSync('./.tmp/token.json')) await this._saveToken();
-        else {
-            const token = require('../.tmp/token.json');
+        if (!token) {
+            const url = this.client.generateAuthUrl({
+                access_type: 'offline',
+                scope: this.scopes,
+            });
+
+            await new Promise((resolve, reject) => {
+                callback(url).then(code => {
+                    this.client.getToken(code, (err, tok) => {
+                        if (err) return reject(err);
+                        this.client.setCredentials(tok);
+
+                        token = tok;
+                        resolve(this);
+                    });
+                });
+            });
+        } else {
             this.client.setCredentials(token);
         }
 
         this.calendar = google.calendar({ version: 'v3', auth: this.client });
-        return this;
+        return { authorized: true, token };
     };
 
-    createEvent(options) {
-        return this.calendar.events.insert({
-            auth: this.client,
-            calendarId: Config.googleapis.defaultCalendar,
-            resource: {
-                summary: options.summary,
-                location: options.location,
-                description: options.description,
-                colorId: options.color || 7,
-                start: {
-                    dateTime: options.start,
-                    timeZone: Config.googleapis.timeZone
-                },
-                end: {
-                    dateTime: options.end,
-                    timeZone: Config.googleapis.timeZone
-                },
-                reminders: {
-                    useDefault: false
-                }
-            }
-        });
+    createEvent(appointment) {
+        const options = this._generateEventOptions(appointment);
+        return this.calendar.events.insert(options);
     }
 }
 
