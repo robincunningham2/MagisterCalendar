@@ -3,6 +3,7 @@ dotenv.config();
 
 module.exports = {
     googleapis: {
+        defaultCalendar: process.env.CALENDAR_ID || 'primary',
         timeZone: process.env.TZ || 'Europe/Amsterdam',
         scopes: (
             process.env.SCOPES ||
