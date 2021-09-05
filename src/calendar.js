@@ -33,11 +33,10 @@ class GoogleCalendar {
     }
 
     async authorize(callback, token = null) {
-        const creds = require('../config/credentials.json');
         this.client = new google.auth.OAuth2(
-            creds.installed.client_id,
-            creds.installed.client_secret,
-            creds.installed.redirect_uris[0]
+            Config.credentials.installed.client_id,
+            Config.credentials.installed.client_secret,
+            Config.credentials.installed.redirect_uris[0]
         );
 
         if (!token) {
