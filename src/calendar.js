@@ -3,7 +3,7 @@ const { google } = require('googleapis');
 
 class GoogleCalendar {
     constructor() {
-        this.scopes = Config.googleapis.scopes;
+        this.scopes = Config.googleApis.scopes;
         this.client = null;
         this.calendar = null;
     }
@@ -11,23 +11,21 @@ class GoogleCalendar {
     _generateEventOptions(appointment) {
         return {
             auth: this.client,
-            calendarId: Config.googleapis.defaultCalendar,
+            calendarId: Config.googleApis.calendarId,
             resource: {
-                summary: `${appointment.Vakken[0].Naam} - ${appointment.Docenten[0].Docentcode}`,
-                location: appointment.Lokatie,
-                description: appointment.Inhoud || '<i>Geen inhoud</i>',
-                // colorId: color || 7,
+                summary: Config.appointments.summary(appointment),
+                location: appointment.Lokatie || Config.appointments.defaults.location,
+                description: appointment.Inhoud || Config.appointments.defaults.description,
+                colorId: Config.appointments.color(appointment),
                 start: {
                     dateTime: new Date(Number(new Date(appointment.Start)) + 7_200_000).toISOString().slice(0, -5),
-                    timeZone: Config.googleapis.timeZone
+                    timeZone: Config.googleApis.timeZone
                 },
                 end: {
                     dateTime: new Date(Number(new Date(appointment.Einde)) + 7_200_000).toISOString().slice(0, -5),
-                    timeZone: Config.googleapis.timeZone
+                    timeZone: Config.googleApis.timeZone
                 },
-                reminders: {
-                    useDefault: false
-                }
+                reminders: Config.appointments.reminders
             }
         };
     }
