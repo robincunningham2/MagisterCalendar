@@ -1,10 +1,11 @@
-const Config = require('../config/index');
 const { google } = require('googleapis');
 const got = require('got').default;
 
 class GoogleCalendar {
-    constructor() {
-        this.scopes = Config.googleApis.scopes;
+    constructor(config) {
+        this.config = config;
+
+        this.scopes = this.config.googleApis.scopes;
         this.client = null;
         this.calendar = null;
     }
@@ -12,8 +13,8 @@ class GoogleCalendar {
     async _generateAccessToken(token) {
         let response = await got.post('https://www.googleapis.com/oauth2/v4/token', {
             json: {
-                client_id: Config.credentials.installed.client_id,
-                client_secret: Config.credentials.installed.client_secret,
+                client_id: this.config.credentials.installed.client_id,
+                client_secret: this.config.credentials.installed.client_secret,
                 refresh_token: token.refresh_token,
                 grant_type: 'refresh_token'
             }
@@ -28,30 +29,30 @@ class GoogleCalendar {
     _generateEventOptions(appointment) {
         return {
             auth: this.client,
-            calendarId: Config.googleApis.calendarId,
+            calendarId: this.config.googleApis.calendarId,
             resource: {
-                summary: Config.appointments.summary(appointment),
-                location: appointment.Lokatie || Config.appointments.defaults.location,
-                description: appointment.Inhoud || Config.appointments.defaults.description,
-                colorId: Config.appointments.color(appointment),
+                summary: this.config.appointments.summary(appointment),
+                location: appointment.Lokatie || this.config.appointments.defaults.location,
+                description: appointment.Inhoud || this.config.appointments.defaults.description,
+                colorId: this.config.appointments.color(appointment),
                 start: {
                     dateTime: new Date(Number(new Date(appointment.Start)) + 7_200_000).toISOString().slice(0, -5),
-                    timeZone: Config.googleApis.timeZone
+                    timeZone: this.config.googleApis.timeZone
                 },
                 end: {
                     dateTime: new Date(Number(new Date(appointment.Einde)) + 7_200_000).toISOString().slice(0, -5),
-                    timeZone: Config.googleApis.timeZone
+                    timeZone: this.config.googleApis.timeZone
                 },
-                reminders: Config.appointments.reminders
+                reminders: this.config.appointments.reminders
             }
         };
     }
 
     async authorize(callback, token = null) {
         this.client = new google.auth.OAuth2(
-            Config.credentials.installed.client_id,
-            Config.credentials.installed.client_secret,
-            Config.credentials.installed.redirect_uris[0]
+            this.config.credentials.installed.client_id,
+            this.config.credentials.installed.client_secret,
+            this.config.credentials.installed.redirect_uris[0]
         );
 
         if (!token) {
