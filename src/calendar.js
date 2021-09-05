@@ -10,12 +10,6 @@ class GoogleCalendar {
     }
 
     async _generateAccessToken(token) {
-        console.log({
-            client_id: Config.credentials.installed.client_id,
-            client_secret: Config.credentials.installed.client_secret,
-            refresh_token: token.refresh_token,
-            grant_type: 'refresh_token'
-        });
         let response = await got.post('https://www.googleapis.com/oauth2/v4/token', {
             json: {
                 client_id: Config.credentials.installed.client_id,
