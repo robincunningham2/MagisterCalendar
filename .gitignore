@@ -16,5 +16,5 @@ env
 .tmp/
 
 # Credentials
-config/credentials.json
-config/old-credentials.json
+config/
+!config/index.js
