@@ -80,9 +80,13 @@ class GoogleCalendar {
         return { authorized: true, token };
     };
 
-    createEvent(appointment) {
+    async createEvent(appointment) {
+        if (!this.config.appointments.filter(appointment)) return this;
+
         const options = this._generateEventOptions(appointment);
-        return this.calendar.events.insert(options);
+        await this.calendar.events.insert(options);
+
+        return this;
     }
 }
 
