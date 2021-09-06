@@ -33,7 +33,8 @@ class GoogleCalendar {
             resource: {
                 summary: this.config.appointments.summary(appointment),
                 location: appointment.Lokatie || this.config.appointments.defaults.location,
-                description: appointment.Inhoud || this.config.appointments.defaults.description,
+                description: `<!--magisterId:${appointment.Id}-->`
+                    + (appointment.Inhoud || this.config.appointments.defaults.description),
                 colorId: this.config.appointments.color(appointment),
                 start: {
                     dateTime: new Date(Number(new Date(appointment.Start)) + 7_200_000).toISOString().slice(0, -5),
@@ -86,6 +87,29 @@ class GoogleCalendar {
         const options = this._generateEventOptions(appointment);
         await this.calendar.events.insert(options);
 
+        return this;
+    }
+
+    async updateEvent(magisterClient, eventId) {
+        const data = (await this.calendar.events.get({
+            calendarId: this.config.googleApis.calendarId,
+            eventId: eventId,
+        })).data;
+        if (!data.description) return this;
+
+        const id = Number(data.description.slice(
+            data.description.indexOf('<!--magisterId:') + 15,
+            data.description.indexOf('-->')
+        ));
+
+        if (!id) return this;
+
+        const appointment = await magisterClient.get(`/personen/${magisterClient.me.Id}/afspraken/${id}`);
+        let options = this._generateEventOptions(appointment);
+        options.eventId = eventId;
+        options.resource.colorId = Number(data.colorId) || 8;
+
+        await this.calendar.events.update(options);
         return this;
     }
 }
