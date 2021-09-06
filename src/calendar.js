@@ -11,13 +11,13 @@ class GoogleCalendar {
     }
 
     async _generateAccessToken(token) {
-        let response = await got.post('https://www.googleapis.com/oauth2/v4/token', {
+        const response = await got.post('https://www.googleapis.com/oauth2/v4/token', {
             json: {
                 client_id: this.config.credentials.installed.client_id,
                 client_secret: this.config.credentials.installed.client_secret,
                 refresh_token: token.refresh_token,
-                grant_type: 'refresh_token'
-            }
+                grant_type: 'refresh_token',
+            },
         }).json();
 
         token.access_token = response.access_token;
@@ -37,14 +37,14 @@ class GoogleCalendar {
                 colorId: this.config.appointments.color(appointment),
                 start: {
                     dateTime: new Date(Number(new Date(appointment.Start)) + 7_200_000).toISOString().slice(0, -5),
-                    timeZone: this.config.googleApis.timeZone
+                    timeZone: this.config.googleApis.timeZone,
                 },
                 end: {
                     dateTime: new Date(Number(new Date(appointment.Einde)) + 7_200_000).toISOString().slice(0, -5),
-                    timeZone: this.config.googleApis.timeZone
+                    timeZone: this.config.googleApis.timeZone,
                 },
-                reminders: this.config.appointments.reminders
-            }
+                reminders: this.config.appointments.reminders,
+            },
         };
     }
 
@@ -52,17 +52,17 @@ class GoogleCalendar {
         this.client = new google.auth.OAuth2(
             this.config.credentials.installed.client_id,
             this.config.credentials.installed.client_secret,
-            this.config.credentials.installed.redirect_uris[0]
+            this.config.credentials.installed.redirect_uris[0],
         );
 
         if (!token) {
             const url = this.client.generateAuthUrl({
                 access_type: 'offline',
-                scope: this.scopes
+                scope: this.scopes,
             });
 
             await new Promise((resolve, reject) => {
-                callback(url).then(code => {
+                callback(url).then((code) => {
                     this.client.getToken(code, (err, t) => {
                         if (err) return reject(err);
                         token = t;
@@ -78,7 +78,7 @@ class GoogleCalendar {
         this.calendar = google.calendar({ version: 'v3', auth: this.client });
 
         return { authorized: true, token };
-    };
+    }
 
     async createEvent(appointment) {
         if (!this.config.appointments.filter(appointment)) return this;

@@ -8,6 +8,6 @@ if (process.env.MAGISTER_CALENDAR) module.exports = JSON.parse(process.env.MAGIS
 else {
     module.exports = {
         ...config,
-        credentials
+        credentials,
     };
 }

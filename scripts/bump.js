@@ -3,7 +3,7 @@
  * Bump the version on package.json and package-lock.json
  * Yes, I realise how shitty this script is
  * No, I don't plan on doing anything about it
- * 
+ *
  * Usage:
  *   npm run bump [x.x.x]
  *   npm run bump [major|minor|patch]
@@ -11,8 +11,8 @@
 
 const fs = require('fs');
 
-let package = require('../package.json');
-let package_lock = require('../package-lock.json');
+const package = require('../package.json');
+const packageLock = require('../package-lock.json');
 
 function bump(bumping) {
     let version = package.version.split('.');
@@ -30,11 +30,12 @@ function bump(bumping) {
     version = version.join('.');
 
     package.version = version;
-    package_lock.version = version;
+    packageLock.version = version;
 
     return Promise.all([
-        new Promise(resolve => fs.writeFile('package.json', JSON.stringify(package, null, 2) + '\n', resolve)),
-        new Promise(resolve => fs.writeFile('package-lock.json', JSON.stringify(package_lock, null, 2) + '\n', resolve))
+        new Promise((resolve) => fs.writeFile('package.json', JSON.stringify(package, null, 2) + '\n', resolve)),
+        new Promise((resolve) => fs.writeFile('package-lock.json',
+            JSON.stringify(packageLock, null, 2) + '\n', resolve)),
     ]);
 }
 

@@ -29,12 +29,12 @@ if (fs.existsSync('.tmp/token.json')) token = require('../.tmp/token.json');
 
 Promise.all([
     calendar.authorize(callback, token),
-    client.login()
-]).then(async result => {
+    client.login(),
+]).then(async (result) => {
     token = result[0].token;
     fs.writeFileSync('.tmp/token.json', JSON.stringify(token));
 
-    let appointments = (await client.get(`/personen/${client.me.Id}/afspraken`)).Items;
+    const appointments = (await client.get(`/personen/${client.me.Id}/afspraken`)).Items;
 
     for (let i = 0; i < appointments.length; i++) {
         await calendar.createEvent(appointments[i]);

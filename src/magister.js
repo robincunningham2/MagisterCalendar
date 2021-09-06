@@ -26,11 +26,13 @@ class Magister {
     }
 
     _generateUrl(base, params = {}) {
-        let items = [];
-        for (let key in params) {
-            items.push(`${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`);
+        const items = [];
+        for (const key in params) {
+            if (params.hasOwnProperty(key)) {
+                items.push(`${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`);
+            }
         }
-    
+
         return items.length > 0 ? `${base}?${items.join('&')}` : base;
     }
 
@@ -49,17 +51,17 @@ class Magister {
     async _submitChallenge(name, optionalData = {}) {
         try {
             const jar = this._cookieJar.toJSON();
-            let json = await got.post(`https://accounts.magister.net/challenges/${name}`, {
+            const json = await got.post(`https://accounts.magister.net/challenges/${name}`, {
                 cookieJar: this._cookieJar,
                 headers: {
                     'Content-Type': 'application/json',
-                    'x-xsrf-token': jar.cookies.find((cookie) => cookie.key === 'XSRF-TOKEN').value
+                    'x-xsrf-token': jar.cookies.find((cookie) => cookie.key === 'XSRF-TOKEN').value,
                 },
                 throwHttpErrors: false,
                 json: Object.assign({
                     sessionId: this._sessionId,
-                    returnUrl: this._generateUrl('/connect/authorize/callback', this._generateQuery())
-                }, optionalData)
+                    returnUrl: this._generateUrl('/connect/authorize/callback', this._generateQuery()),
+                }, optionalData),
             }).json();
 
             return json;
@@ -69,7 +71,7 @@ class Magister {
                 tenantname: null,
                 username: null,
                 useremail: null,
-                error
+                error,
             };
         }
     }
@@ -77,9 +79,9 @@ class Magister {
     async _initCookies() {
         this._cookieJar = new CookieJar();
 
-        let response = await got(
+        const response = await got(
             this._generateUrl('https://accounts.magister.net/connect/authorize', this._generateQuery()),
-            { cookieJar: this._cookieJar }
+            { cookieJar: this._cookieJar },
         );
 
         this._sessionId = String(url.parse(response.url, true).query.sessionId);
@@ -89,7 +91,7 @@ class Magister {
         if (!this._accessToken) throw new MagisterError('Not logged into magister. Try client.login() first', '02');
         return await got(`https://${this.hostname}/api${path}`, {
             cookieJar: this._cookieJar,
-            headers: { authorization: `Bearer ${this._accessToken}` }
+            headers: { authorization: `Bearer ${this._accessToken}` },
         }).json();
     }
 
@@ -98,7 +100,7 @@ class Magister {
         return await got.post(`https://${this.hostname}/api${path}`, {
             cookieJar: this._cookieJar,
             headers: { authorization: `Bearer ${this._accessToken}` },
-            json: data
+            json: data,
         }).json();
     }
 
@@ -107,7 +109,7 @@ class Magister {
         return await got.put(`https://${this.hostname}/api${path}`, {
             cookieJar: this._cookieJar,
             headers: { authorization: `Bearer ${this._accessToken}` },
-            json: data
+            json: data,
         }).json();
     }
 
@@ -116,7 +118,7 @@ class Magister {
         return await got.patch(`https://${this.hostname}/api${path}`, {
             cookieJar: this._cookieJar,
             headers: { authorization: `Bearer ${this._accessToken}` },
-            json: data
+            json: data,
         }).json();
     }
 
@@ -125,7 +127,7 @@ class Magister {
         return await got.delete(`https://${this.hostname}/api${path}`, {
             cookieJar: this._cookieJar,
             headers: { authorization: `Bearer ${this._accessToken}` },
-            json: data
+            json: data,
         }).json();
     }
 
@@ -134,7 +136,7 @@ class Magister {
 
         await this._submitChallenge('current');
         await this._submitChallenge('username', { username: this.user });
-        let response = await this._submitChallenge('password', { password: this.password });
+        const response = await this._submitChallenge('password', { password: this.password });
 
         // Hide the password
         this.password = 'Am0gus';
@@ -144,21 +146,21 @@ class Magister {
             throw new MagisterError('No redirect URL received. Most likely the credentials are incorrect.', '01');
         }
 
-        let redirectResponse = await got(`https://accounts.magister.net${response.redirectURL}`, {
+        const redirectResponse = await got(`https://accounts.magister.net${response.redirectURL}`, {
             cookieJar: this._cookieJar,
             throwHttpErrors: false,
-            followRedirect: false
+            followRedirect: false,
         });
 
-        let { hash } = url.parse(redirectResponse.headers.location, true);
+        const { hash } = url.parse(redirectResponse.headers.location, true);
 
         this._accessToken = hash.split('&').reduce((acc, curr) => {
-            let v = curr.split('=');
+            const v = curr.split('=');
             acc[v[0]] = v[1];
             return acc;
         }, {}).access_token;
 
-        let account = await this.get('/account?noCache=0');
+        const account = await this.get('/account?noCache=0');
         this.me = account.Persoon;
     }
 }
