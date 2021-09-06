@@ -7,7 +7,8 @@
     "start": "node src/app",
     "test": "echo \"Error: no test specified\" && exit 1",
     "setup": "mkdir .tmp/ || true",
-    "bump": "node scripts/bump.js"
+    "bump": "node scripts/bump.js",
+    "lint": "./node_modules/.bin/eslint ."
   },
   "repository": {
     "type": "git",
@@ -26,5 +27,9 @@
     "got": "^11.8.2",
     "tough-cookie": "^4.0.0",
     "url": "^0.11.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.32.0",
+    "eslint-config-google": "^0.14.0"
   }
 }
