@@ -2,8 +2,9 @@
   "name": "magistercalendar",
   "version": "1.0.0",
   "description": "Intergrate Magister with Google Calendar.",
-  "main": "src/main.js",
+  "main": "src/app.js",
   "scripts": {
+    "start": "node src/app",
     "test": "echo \"Error: no test specified\" && exit 1",
     "setup": "mkdir .tmp/ || true",
     "bump": "node scripts/bump.js"
