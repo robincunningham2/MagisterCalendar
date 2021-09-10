@@ -76,7 +76,7 @@ class GoogleCalendar {
             redirect_uri: this._config.credentials.installed.redirect_uris[0],
             scopes: this._config.googleApis.scopes,
             callback: this._options.callback,
-        }, this._config.token);
+        }, this._token);
 
         const auth = await oauth.auth;
         this._auth = auth.auth;
@@ -110,34 +110,20 @@ class GoogleCalendar {
     }
 
     async createEvent(appointment) {
-        if (!this.config.appointments.filter(appointment)) return this;
+        if (!this._config.appointments.filter(appointment)) return this;
 
         const options = this._generateEventOptions(appointment);
-        await this.calendar.events.insert(options);
+        await this._calendar.events.insert(options);
 
         return this;
     }
 
-    async updateEvent(magisterClient, eventId) {
-        const data = (await this.calendar.events.get({
-            calendarId: this.config.googleApis.calendarId,
-            eventId: eventId,
-        })).data;
-        if (!data.description) return this;
-
-        const id = Number(data.description.slice(
-            data.description.indexOf('<!--magisterId:') + 15,
-            data.description.indexOf('-->'),
-        ));
-
-        if (!id) return this;
-
-        const appointment = await magisterClient.get(`/personen/${magisterClient.me.Id}/afspraken/${id}`);
+    async updateEvent(appointment, eventId, colorId = '8') {
         const options = this._generateEventOptions(appointment);
         options.eventId = eventId;
-        options.resource.colorId = Number(data.colorId) || 8;
+        options.resource.colorId = Math.max(1, Math.min(11, Number(colorId) || 8));
 
-        await this.calendar.events.update(options);
+        await this._calendar.events.update(options);
         return this;
     }
 }
