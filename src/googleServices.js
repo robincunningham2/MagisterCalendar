@@ -95,7 +95,7 @@ class GoogleCalendar {
                 location: appointment.Lokatie || this._config.appointments.defaults.location,
                 description: `<!--magisterId:${appointment.Id}-->` +
                     (appointment.Inhoud || this._config.appointments.defaults.description)
-                    .split('<br>').join('\n'),
+                        .split('<br>').join('\n'),
                 colorId: this._config.appointments.color(appointment),
                 start: {
                     dateTime: new Date(Number(new Date(appointment.Start)) + 7_200_000).toISOString().slice(0, -5),
@@ -122,7 +122,7 @@ class GoogleCalendar {
     async updateEvent(appointment, eventData) {
         const options = this._generateEventOptions(appointment);
         options.resource.colorId = Math.max(1, Math.min(11, Number(eventData.colorId) || 8));
-        options.resource.reminders = eventData.reminders || { useDefault: false, };
+        options.resource.reminders = eventData.reminders || { useDefault: false };
 
         await this._calendar.events.update({
             eventId: eventData.id,

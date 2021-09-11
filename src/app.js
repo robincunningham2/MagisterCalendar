@@ -21,27 +21,29 @@ Promise.all([
 
     const items = await calendar.listEvents(
         new Date(Number(new Date) - 86_400_000).toISOString(),
-        new Date(Number(new Date) + 604_800_000).toISOString()
+        new Date(Number(new Date) + 604_800_000).toISOString(),
     );
 
-    let existingAppointments = {};
-    items.forEach(item => {
+    const existing = {};
+    items.forEach((item) => {
         const id = ((item.description) || '').slice(
             ((item.description) || '').indexOf('<!--magisterId:') + 15,
             ((item.description) || '').indexOf('-->'),
         );
 
-        if (id) existingAppointments[id] = item;
+        if (id) existing[id] = item;
     });
 
     const res = await magister.get(`/personen/${magister.me.Id}/afspraken`);
     for (let i = 0; i < res.Items.length; i++) {
         const item = res.Items[i];
-        if (!existingAppointments[String(item.Id)]) await calendar.createEvent(item);
+        if (!existing[String(item.Id)]) await calendar.createEvent(item);
     }
 
-    for (const id in existingAppointments) {
-        const appointment = await magister.get(`/personen/${magister.me.Id}/afspraken/${id}`);
-        await calendar.updateEvent(appointment, existingAppointments[id]);
+    for (const id in existing) {
+        if (existing.hasOwnProperty(id)) {
+            const appointment = await magister.get(`/personen/${magister.me.Id}/afspraken/${id}`);
+            await calendar.updateEvent(appointment, existing[id]);
+        }
     }
 });
