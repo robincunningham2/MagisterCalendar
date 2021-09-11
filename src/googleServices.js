@@ -94,7 +94,8 @@ class GoogleCalendar {
                 summary: this._config.appointments.summary(appointment),
                 location: appointment.Lokatie || this._config.appointments.defaults.location,
                 description: `<!--magisterId:${appointment.Id}-->` +
-                    (appointment.Inhoud || this._config.appointments.defaults.description),
+                    (appointment.Inhoud || this._config.appointments.defaults.description)
+                    .split('<br>').join('\n'),
                 colorId: this._config.appointments.color(appointment),
                 start: {
                     dateTime: new Date(Number(new Date(appointment.Start)) + 7_200_000).toISOString().slice(0, -5),
@@ -118,13 +119,28 @@ class GoogleCalendar {
         return this;
     }
 
-    async updateEvent(appointment, eventId, colorId = '8') {
+    async updateEvent(appointment, eventData) {
         const options = this._generateEventOptions(appointment);
-        options.eventId = eventId;
-        options.resource.colorId = Math.max(1, Math.min(11, Number(colorId) || 8));
+        options.resource.colorId = Math.max(1, Math.min(11, Number(eventData.colorId) || 8));
+        options.resource.reminders = eventData.reminders || { useDefault: false, };
 
-        await this._calendar.events.update(options);
+        await this._calendar.events.update({
+            eventId: eventData.id,
+            ...options,
+        });
+
         return this;
+    }
+
+    async listEvents(timeMin, timeMax) {
+        const res = await this._calendar.events.list({
+            calendarId: this._config.googleApis.calendarId,
+            maxResults: 250,
+            timeMin,
+            timeMax,
+        });
+
+        return res.data.items || [];
     }
 }
 
