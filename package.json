@@ -9,7 +9,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "setup": "mkdir .tmp/ || true",
     "bump": "node scripts/bump.js",
-    "lint": "./node_modules/.bin/eslint ."
+    "lint": "./node_modules/.bin/eslint .",
+    "web": "node server.js"
   },
   "repository": {
     "type": "git",
