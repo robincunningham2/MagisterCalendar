@@ -2,6 +2,12 @@
 
 _Lees dit in [het Nederlands](../nl-NL/README.md)_
 
+## Table of Contents
+
+* [Local](#local)
+    * [Setup](#setup)
+    * [Usage](#usage)
+
 ## Local
 
 ### Setup
