@@ -1,6 +1,6 @@
 # Documentation
 
-_Lees dit in [het Nederlands](../nl/README.md)_
+_Lees dit in [het Nederlands](../nl-NL/README.md)_
 
 ## Local
 
