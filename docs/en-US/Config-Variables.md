@@ -142,7 +142,7 @@ color: function($) {
 
 A 3 letter long id corresponding to your school. Can be found in the domain name of magister:
 
-![Screenshot](../assets/school-id.png)
+![Screenshot](../school-id.png)
 
 _In the case above, `llr` is the school ID_
 

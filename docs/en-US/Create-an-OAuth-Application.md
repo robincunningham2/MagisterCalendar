@@ -31,27 +31,27 @@ https://www.googleapis.com/auth/calendar
 https://www.googleapis.com/auth/calendar.events
 ```
 
-![Screenshot](../assets/google-oauth-scopes.png)
+![Screenshot](../google-oauth-scopes.png)
 
 Click **Save and Continue**
 
 #### 5. In the **Test Users** tab, click **Add Users**, add your own email.
 
-![Screenshot](../assets/google-oauth-test-users.png)
+![Screenshot](../google-oauth-test-users.png)
 
 Afterwards, click **Save and Continue** and **Back to Dashboard**
 
 #### 6. Click **Credentials** on the side bar.
 
-![Screenshot](../assets/google-apis-and-services-credentials.png)
+![Screenshot](../google-apis-and-services-credentials.png)
 
 #### 7. Click **Create Credentials** > **OAuth client ID** and select **Desktop app**
 
-![Screenshot](../assets/google-create-credentials.png)
+![Screenshot](../google-create-credentials.png)
 
 #### 8. Select the download button.
 
-![Screenshot](../assets/download-credentials-screenshot.png)
+![Screenshot](../download-credentials-screenshot.png)
 
 Save the downloaded file to `config/credentials.json`
 
