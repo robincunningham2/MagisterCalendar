@@ -119,7 +119,12 @@ class GoogleCalendar {
         return this;
     }
 
-    async updateEvent(appointment, eventData) {
+    async updateEvent(appointment, eventData, deleteOnReject = false) {
+        if (!this._config.appointments.filter(appointment)) {
+            if (deleteOnReject) return await this.deleteEvent(eventData.id);
+            return this;
+        }
+
         const options = this._generateEventOptions(appointment);
         options.resource.colorId = Math.max(1, Math.min(11, Number(eventData.colorId) || 8));
         options.resource.reminders = eventData.reminders || { useDefault: false };
