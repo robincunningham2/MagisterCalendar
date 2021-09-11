@@ -26,9 +26,12 @@ Promise.all([
 
     const existing = {};
     items.forEach((item) => {
-        const id = ((item.description) || '').slice(
-            ((item.description) || '').indexOf('<!--magisterId:') + 15,
-            ((item.description) || '').indexOf('-->'),
+        if (!item.description) return;
+        item.description = String(item.description);
+
+        const id = item.description.slice(
+            item.description.indexOf('<!--magisterId:') + 15,
+            item.description.indexOf('-->'),
         );
 
         if (id) existing[id] = item;
@@ -36,14 +39,18 @@ Promise.all([
 
     const res = await magister.get(`/personen/${magister.me.Id}/afspraken`);
     for (let i = 0; i < res.Items.length; i++) {
-        const item = res.Items[i];
-        if (!existing[String(item.Id)]) await calendar.createEvent(item);
+        try {
+            const item = res.Items[i];
+            if (!existing[String(item.Id)]) await calendar.createEvent(item);
+        } finally {}
     }
 
     for (const id in existing) {
         if (existing.hasOwnProperty(id)) {
-            const appointment = await magister.get(`/personen/${magister.me.Id}/afspraken/${id}`);
-            await calendar.updateEvent(appointment, existing[id]);
+            try {
+                const appointment = await magister.get(`/personen/${magister.me.Id}/afspraken/${id}`);
+                await calendar.updateEvent(appointment, existing[id]);
+            } finally {}
         }
     }
 });
