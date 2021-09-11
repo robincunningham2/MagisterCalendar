@@ -4,7 +4,7 @@
  *
  * Usage:
  *   npm run bump [n.n.n|keyword]?
- * 
+ *
  * Examples:
  *   npm run bump 1.0.0     Change the version to 1.0.0
  *   npm run bump major     Increase the major value of the current version, and set the minor and patch values to 0
@@ -17,8 +17,9 @@ const fs = require('fs');
 const package = require('../package.json');
 const packageLock = require('../package-lock.json');
 
+const oldVersion = package.version;
+
 function cli() {
-    const oldVersion = package.version;
     let version = oldVersion.split('.');
 
     let arg = process.argv[1] || '';
