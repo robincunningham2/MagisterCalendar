@@ -1,0 +1,4 @@
+## Magister Appointment Object
+
+```js
+```
