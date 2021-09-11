@@ -132,6 +132,15 @@ class GoogleCalendar {
         return this;
     }
 
+    async deleteEvent(eventId) {
+        await this._calendar.events.delete({
+            calendarId: this._config.googleApis.calendarId,
+            eventId,
+        });
+
+        return this;
+    }
+
     async listEvents(timeMin, timeMax) {
         const res = await this._calendar.events.list({
             calendarId: this._config.googleApis.calendarId,

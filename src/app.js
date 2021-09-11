@@ -46,11 +46,15 @@ Promise.all([
     }
 
     for (const id in existing) {
-        if (existing.hasOwnProperty(id)) {
-            try {
-                const appointment = await magister.get(`/personen/${magister.me.Id}/afspraken/${id}`);
-                await calendar.updateEvent(appointment, existing[id]);
-            } finally {}
-        }
+        try {
+            if (existing.hasOwnProperty(id)) {
+                try {
+                    const appointment = await magister.get(`/personen/${magister.me.Id}/afspraken/${id}`);
+                    await calendar.updateEvent(appointment, existing[id], true);
+                } catch {
+                    await calendar.deleteEvent(existing[id].id);
+                }
+            }
+        } finally {}
     }
 });
