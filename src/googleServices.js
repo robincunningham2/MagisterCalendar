@@ -98,11 +98,11 @@ class GoogleCalendar {
                         .split('<br>').join('\n'),
                 colorId: this._config.appointments.color(appointment),
                 start: {
-                    dateTime: new Date(Number(new Date(appointment.Start)) + 7_200_000).toISOString(),
+                    dateTime: new Date(appointment.Start).toISOString(),
                     timeZone: this._config.googleApis.timeZone,
                 },
                 end: {
-                    dateTime: new Date(Number(new Date(appointment.Einde)) + 7_200_000).toISOString(),
+                    dateTime: new Date(appointment.Einde).toISOString(),
                     timeZone: this._config.googleApis.timeZone,
                 },
                 reminders: this._config.appointments.reminders,
