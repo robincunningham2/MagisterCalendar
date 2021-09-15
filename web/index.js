@@ -10,7 +10,7 @@ app.use('/api/v1', require('./api/v1'));
 app.use('/api', (_, res) => {
     res.status(404).json({
         status: 404,
-        message: 'The requested page was not found.'
+        message: 'The requested page was not found.',
     });
 });
 

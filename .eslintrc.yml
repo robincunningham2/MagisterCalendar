@@ -11,4 +11,5 @@ rules: {
   object-curly-spacing: [1, always],
   max-len: [2, 119],
   require-jsdoc: [0],
+  new-cap: [0]
 }
