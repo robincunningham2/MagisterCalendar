@@ -34,8 +34,8 @@ api.get('/redirectOAuth', async (req, res) => {
     }
 
     let token;
-    try { // eslint-disable-next-line no-unused-vars
-        token = OAuth2.generateTokenFile(OAUTH_OPTIONS, req.query.code);
+    try {
+        token = await OAuth2.generateTokenFile(OAUTH_OPTIONS, req.query.code);
     } catch {
         return res.status(500).json({
             status: 500,
@@ -43,8 +43,8 @@ api.get('/redirectOAuth', async (req, res) => {
         });
     }
 
-    // Save the token file somewhere and redirect to a page.
-    res.send();
+    req.session.tokenFile = token;
+    res.redirect(302, '/');
 });
 
 api.use((req, res) => {
