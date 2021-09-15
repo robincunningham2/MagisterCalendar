@@ -48,12 +48,7 @@ class OAuth2 {
         }
 
         this.auth.setCredentials(this.token);
-
-        return {
-            success: true,
-            token: this.token,
-            auth: this.auth,
-        };
+        return this;
     }
 }
 
@@ -67,6 +62,21 @@ OAuth2.generateAuthUrl = (options) => {
     return auth.generateAuthUrl({
         access_type: 'offline',
         scope: options.scopes,
+    });
+};
+
+OAuth2.generateTokenFile = (options, code) => {
+    const auth = new google.auth.OAuth2(
+        options.client_id,
+        options.client_secret,
+        options.redirect_uri,
+    );
+
+    return new Promise((resolve, reject) => {
+        auth.getToken(code, (err, token) => {
+            if (err) return reject(err);
+            resolve(token);
+        });
     });
 };
 
