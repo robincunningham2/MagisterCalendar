@@ -3,56 +3,72 @@ const got = require('got').default;
 
 class OAuth2 {
     constructor(options, token = null) {
-        this.auth = new Promise(async (resolve, reject) => {
-            try {
-                const auth = new google.auth.OAuth2(
-                    options.client_id,
-                    options.client_secret,
-                    options.redirect_uri,
-                );
+        this.options = options;
+        this.token = token;
+        this.auth = null;
+    }
 
-                if (!token) {
-                    const url = auth.generateAuthUrl({
-                        access_type: 'offline',
-                        scope: options.scopes,
-                    });
+    async authorize() {
+        this.auth = new google.auth.OAuth2(
+            this.options.client_id,
+            this.options.client_secret,
+            this.options.redirect_uri,
+        );
 
-                    await new Promise((resolve, reject) => {
-                        options.callback(url).then((code) => {
-                            auth.getToken(code, (err, t) => {
-                                if (err) return reject(err);
-                                token = t;
-                                resolve();
-                            });
+        if (!this.token) {
+            const url = this.auth.generateAuthUrl({
+                access_type: 'offline',
+                scope: this.options.scopes,
+            });
+
+            if (!this.options.code) {
+                await new Promise((resolve, reject) => {
+                    this.options.callback(url).then((code) => {
+                        this.auth.getToken(code, (err, t) => {
+                            if (err) return reject(err);
+                            this.token = t;
+                            resolve();
                         });
                     });
-                } else if (new Date > token.expiry_date - 1000) {
-                    const now = Number(new Date);
-                    const response = await got.post('https://www.googleapis.com/oauth2/v4/token', {
-                        json: {
-                            client_id: options.client_id,
-                            client_secret: options.client_secret,
-                            refresh_token: token.refresh_token,
-                            grant_type: 'refresh_token',
-                        },
-                    }).json();
-
-                    token.access_token = response.access_token;
-                    token.expiry_date = now + response.expires_in * 1000;
-                }
-
-                auth.setCredentials(token);
-                resolve({
-                    success: true,
-                    token,
-                    auth,
                 });
-            } catch (err) {
-                reject(err);
             }
-        });
+        } else if (new Date > this.token.expiry_date - 1000) {
+            const now = Number(new Date);
+            const response = await got.post('https://www.googleapis.com/oauth2/v4/token', {
+                json: {
+                    client_id: this.options.client_id,
+                    client_secret: this.options.client_secret,
+                    refresh_token: this.token.refresh_token,
+                    grant_type: 'refresh_token',
+                },
+            }).json();
+
+            this.token.access_token = response.access_token;
+            this.token.expiry_date = now + response.expires_in * 1000;
+        }
+
+        this.auth.setCredentials(this.token);
+
+        return {
+            success: true,
+            token: this.token,
+            auth: this.auth,
+        };
     }
 }
+
+OAuth2.generateAuthUrl = (options) => {
+    const auth = new google.auth.OAuth2(
+        options.client_id,
+        options.client_secret,
+        options.redirect_uri,
+    );
+
+    return auth.generateAuthUrl({
+        access_type: 'offline',
+        scope: options.scopes,
+    });
+};
 
 class GoogleCalendar {
     constructor(config, callback, token = null) {
@@ -78,9 +94,9 @@ class GoogleCalendar {
             callback: this._options.callback,
         }, this._token);
 
-        const auth = await oauth.auth;
-        this._auth = auth.auth;
-        this._token = auth.token;
+        await oauth.authorize();
+        this._auth = oauth.auth;
+        this._token = oauth.token;
 
         this._calendar = google.calendar({ version: 'v3', auth: this._auth });
         return this._token;
@@ -180,11 +196,11 @@ class GooglePeople {
             redirect_uri: this._config.credentials.installed.redirect_uris[0],
             scopes: this._config.googleApis.scopes,
             callback: this._options.callback,
-        }, this._config.token);
+        }, this._token);
 
-        const auth = await oauth.auth;
-        this._auth = auth.auth;
-        this._token = auth.token;
+        await oauth.authorize();
+        this._auth = oauth.auth;
+        this._token = oauth.token;
 
         this._people = google.people({ version: 'v1', auth: this._auth });
         return this._token;
