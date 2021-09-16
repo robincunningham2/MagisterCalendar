@@ -1,4 +1,4 @@
-const Config = require('../config/index');
+const config = require('../config/index');
 
 const fs = require('fs');
 const path = require('path');
@@ -9,8 +9,8 @@ const google = require('./googleServices');
 let token = null;
 if (fs.existsSync(path.join(process.cwd(), '.tmp/token.json'))) token = require('../.tmp/token.json');
 
-const calendar = new google.GoogleCalendar(Config, google.defaults.DESKTOP_CALLBACK, token);
-const magister = new Magister(Config.magister);
+const calendar = new google.GoogleCalendar(config, google.defaults.DESKTOP_CALLBACK, token);
+const magister = new Magister(config.settings.magister);
 
 Promise.all([
     calendar.authorize(),
