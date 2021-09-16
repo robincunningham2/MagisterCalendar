@@ -16,9 +16,15 @@ app.get('/', (_, res) => {
     res.render('pages/index', { language: require('./languages/nl-NL').index });
 });
 
-app.get('/signup', (req, res) => {
+app.get('/signup', async (req, res) => {
     if (!req.session.tokenFile) return res.redirect(302, '/api/v1/generateAuthUrl');
-    res.render('pages/signup', { token: JSON.stringify(req.session.tokenFile) });
+    const google = require('../src/googleServices');
+    const people = new google.GooglePeople(require('../config/index'), google.defaults.DESKTOP_CALLBACK, true, req.session.tokenFile);
+
+    await people.authorize();
+    const me = await people.me();
+
+    res.render('pages/signup', { name: me.names[0].displayName });
 });
 
 app.use('/api/v1', require('./api/v1'));
