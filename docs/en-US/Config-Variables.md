@@ -1,158 +1,145 @@
 ## Config Variables
 
-* `googleApis`
-    * [`googleApis.calendarId`](#googleapiscalendarid-string)
-    * [`googleApis.timeZone`](#googleapistimezone-string)
-    * [`googleApis.scopes`](##googleapisscopes-arraystring)
-* `appointments`
-    * `appointments.defaults`
-        * [`appointments.defaults.location`](#appointmentsdefaultslocation-string)
-        * [`appointments.defaults.description`](#appointmentsdefaultsdescription-string)
-    * [`appointments.reminders`](#appointmentsreminders-object)
-    * [`appointments.filter`](#appointmentsfilter-function)
-    * [`appointments.summary`](#appointmentssummary-function)
-    * [`appointments.color`](#appointmentscolor-function)
-* `magister`
-    * [`magister.schoolId`](#magisterschoolid-string)
-    * [`magister.userId`](#magisteruserid-number--string)
-    * [`magister.password`](#magisterpassword-string)
+Create a file at `config/config.js`:
 
-
-The config variables are located at `config/config.js`:
+_Note that if you are running this program on a hosting serivice (like Heroku) where you can onnly set config
+variables, you can set the `MAGISTER_CALENDAR_CONFIG` variable to a string of this file._
 
 ```js
 module.exports = {
-    googleApis: {
-        calendarId: String,
-        timeZone: String,
-        scopes: Array[String]
-    },
-    appointments: {
-        defaults: {
-            location: String,
-            description: String,
+    settings: {
+        magister: {
+            // Your Magister school ID. Found in the domain name of Magister. e.g.
+            // abc.magister.net -> 'abc'
+            schoolId: 'school_id',
+            // User ID used to login to magister
+            userId: 'user_id',
+            // Magister password matching your userId
+            password: 'password'
         },
-        reminders: Object,
-        filter: Function,
-        summary: Function,
-        color: Function
+        // Calendar ID to do the magic on, use the keyword 'primary' for your main calendar
+        calendar: 'primary',
+        // Your local time zone. See https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+        timeZone: 'Europe/Amsterdam',
+        // Default location name if Magister has none
+        defaultLocationName: 'Niet bekend',
+        // Default HTML description if the Magister content is empty
+        defaultDescription: '<i>Geen inhoud</i>',
+        // Google calendar reminders. { useDefault: false } for no reminders at all
+        reminders: { useDefault: false }
     },
-    magister: {
-        schoolId: String,
-        userId: Number || String,
-        password: String
+    scopes: [ // Google OAuth scopes matching your OAuth application:
+        'https://www.googleapis.com/auth/userinfo.profile',
+        'https://www.googleapis.com/auth/user.emails.read',
+        'https://www.googleapis.com/auth/calendar',
+        'https://www.googleapis.com/auth/calendar.events'
+    ],
+    functions: {
+        // Returns a boolean to include or disinclude an appointment based on it's data
+        filter: (magisterAppointment: Object) => Boolean,
+        // Generate a summary for Google Calendar. Returns a string
+        summary: (magisterAppointment: Object) => String,
+        // Generate a color for Google Calendar. Returns a number from 1-11
+        color: (magisterAppointment: Object) => Number
     }
-};
-```
-
-#### googleApis.calendarId `String`
-
-The calendar ID to store all the appointments. Use the keyword `primary` for the main calendar.
-
-#### googleApis.timeZone `String`
-
-A timezone from the TZ database. See [List of tz database time zones - Wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) for more info
-
-#### googleApis.scopes `Array[String]`
-
-Google OAuth scopes:
-
-```js
-[
-    'https://www.googleapis.com/auth/userinfo.profile',
-    'https://www.googleapis.com/auth/user.emails.read',
-    'https://www.googleapis.com/auth/calendar',
-    'https://www.googleapis.com/auth/calendar.events'
-]
-```
-
-#### appointments.defaults.location `String`
-
-Default location if none is provided by Magister.
-
-#### appointments.defaults.description `String`
-
-Default description. Supports HTML.
-
-#### appointments.reminders `Object`
-
-Google calendar default reminders.
-
-#### appointments.filter `Function`
-
-Include or disinclude appointments in Google Calendar.
-
-```js
-filter(magisterAppointment: Object): Boolean
-```
-
-Example:
-
-```js
-// Only include appointments if they don't contain 'foo' in the summary.
-filter: function($) {
-    return $.Omschrijving.indexOf('foo') != -1;
 }
 ```
 
-[`magisterAppointment`](Magister-Appointment-Object.md) object
+### `magisterAppointment` Object
 
-#### appointments.summary `Function`
+This object passed in `functions.filter`, `functions.summary`,  and `functions.color`.
 
-Generate a summary based on the Magister appointment.
-
-```js
-summary(magisterAppointment: Object): String
-```
-
-Example:
+The `magisterAppointment` is from the Magister API:
 
 ```js
-// Return the lesson hour and the subject name, but only if it is a
-// lesson. Else, return the default summary.
-summary: function($) {
-    if ($.Vakken.length) return `${$.LesuurVan}. ${$.Vakken[0].Naam}`;
-    else return $.Omschrijving;
+magisterAppointment: {
+{
+    Id: 3647977,
+    Links: [
+        // Links of previous, current and next appointments
+        // Note that these are not always present
+        {
+            Rel: 'Prev',
+            Href: '/api/personen/123456/afspraken/3647976'
+        },
+        {
+            Rel: 'Self',
+            Href: '/api/personen/123456/afspraken/3647977'
+        },
+        {
+            Rel: 'Next',
+            Href: '/api/personen/123456/afspraken/3647978'
+        }
+    ],
+    // Start of appointment
+    Start: 'yyyy-MM-dd"T"HH:mm:ss.0000000Z',
+    // End of appointment
+    Einde: 'yyyy-MM-dd"T"HH:mm:ss.0000000Z',
+    // If it is a lesson, the lesson hour will be here as a number, else null
+    LesuurVan: 1,
+    // Same as LesuurVan, but the lesson hour the appointment ends
+    LesuurTotMet: 2,
+    // Boolean indicating if the appoint is the whole day
+    DuurtHeleDag: false,
+    // Summary
+    Omschrijving: 'la - KBR - VX3la_2',
+    // Location
+    Lokatie: 'D04',
+    // Appointment status. Is 4 if the lesson is cancelled. 7 for a normal lesson
+    Status: 7,
+    // Appointment type. 13 for a normal lesson.
+    Type: 13,
+    // If the lesson is online
+    IsOnlineDeelname: false,
+    // Honestly don't know what this is
+    WeergaveType: 0,
+    // Homework/information, else null
+    Inhoud: null,
+    // Honestly don't know what this is
+    InfoType: 0,
+    // If you are late, skipped the class, forgot homework, etc. it will show here
+    Aantekening: null,
+    // Set homework/information as done
+    Afgerond: false,
+    // Repeating
+    HerhaalStatus: 0,
+    Herhaling: null,
+    // Subjects
+    Vakken: [
+        {
+            // Unique subject ID
+            Id: 79,
+            // Subject name
+            Naam: 'Latijnse taal en letterkunde'
+        }
+    ],
+    Docenten: [
+        {
+            // Unique teacher code
+            Id: 359,
+            // Teacher name
+            Naam: 'S.D. Kolenbrander',
+            // Teacher code. Usually a 3 letter uppercase code.
+            Docentcode: 'KBR'
+        },
+        ...
+    ],
+    Lokalen: [
+        {
+            // Classroom name
+            Naam: 'D04'
+        }
+    ],
+    // Groups
+    Groepen: null,
+    // If the appointment/lesson is linked to an assignment the ID will be here, else 0
+    OpdrachtId: 0,
+    // If the appointment/lesson has any attatchments
+    HeeftBijlagen: false,
+    // Attatchments
+    Bijlagen: null
 }
 ```
-
-[`magisterAppointment`](Magister-Appointment-Object.md) object
-
-#### appointments.color `Function`
-
-Generate a Google Calendar color based on the Magister appointment.
-
-```js
-color(magisterAppointment: Object): Number || String
-```
-
-Example:
-
-```js
-// If the appointment is a lesson, make it blue, otherwise make it grey
-color: function($) {
-    if ($.Vakken.length) return 7; // ColorID for blue
-    else return 8; // ColorID for grey
-}
-```
-
-[`magisterAppointment`](Magister-Appointment-Object.md) object
-
-#### magister.schoolId `String`
-
-A 3 letter long id corresponding to your school. Can be found in the domain name of magister:
-
-![Screenshot](../school-id.png)
-
-_In the case above, `llr` is the school ID_
-
-#### magister.userId `Number || String`
-
-Your login username/user id.
-
-#### magister.password `String`
-
-Your password matching your user ID.
 
 ---
 

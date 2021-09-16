@@ -53,7 +53,10 @@ Afterwards, click **Save and Continue** and **Back to Dashboard**
 
 ![Screenshot](../download-credentials-screenshot.png)
 
-Save the downloaded file to `config/credentials.json`
+Save the downloaded file to `config/credentials.json`.
+
+If you are using a service like Heroku that only allows you to change the config variables,
+you can set the `GOOGLE_CREDENTIALS` variable to a JSON encoded string of this file.
 
 ---
 
