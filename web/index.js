@@ -13,7 +13,18 @@ app.use('/static/css', express.static('web/css'));
 app.use('/static/js', express.static('web/js'));
 
 app.get('/', (_, res) => {
-    res.end('Index page');
+    res.redirect('/lng/en-US/index');
+});
+
+app.get('/lng/:lng/index', (req, res, next) => {
+    let lang;
+    try {
+        lang = require(`./languages/${req.params.lng.split('/').join('')}.json`);
+    } catch {
+        return next();
+    }
+
+    res.render('pages/index', { language: lang.index });
 });
 
 app.use('/api/v1', require('./api/v1'));
@@ -27,8 +38,7 @@ app.use('/api', (_, res) => {
 
 app.use('/', (req, res, next) => {
     if (req.url.startsWith('/static')) return next();
-    // res.status(404).render('errors/404');
-    res.end('404 not found');
+    res.status(404).render('errors/404');
 });
 
 app.listen(3000, () => {
