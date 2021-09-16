@@ -81,7 +81,7 @@ OAuth2.generateTokenFile = (options, code) => {
 };
 
 class GoogleCalendar {
-    constructor(config, callback, token = null) {
+    constructor(config, callback, web = false, token = null) {
         this._config = config;
 
         this._auth = null;
@@ -96,11 +96,12 @@ class GoogleCalendar {
     }
 
     async authorize() {
+        const creds = web ? this._config.credentials.web : this._config.credentials.installed;
         const oauth = new OAuth2({
-            client_id: this._config.credentials.installed.client_id,
-            client_secret: this._config.credentials.installed.client_secret,
-            redirect_uri: this._config.credentials.installed.redirect_uris[0],
-            scopes: this._config.scopes,
+            client_id: creds.client_id,
+            client_secret: creds.client_secret,
+            redirect_uri: creds.redirect_uris[0],
+            scopes: this._config.googleApis.scopes,
             callback: this._options.callback,
         }, this._token);
 
@@ -185,7 +186,7 @@ class GoogleCalendar {
 }
 
 class GooglePeople {
-    constructor(config, callback, token = null) {
+    constructor(config, callback, web = false, token = null) {
         this._config = config;
 
         this._auth = null;
@@ -200,11 +201,12 @@ class GooglePeople {
     }
 
     async authorize() {
+        const creds = web ? this._config.credentials.web : this._config.credentials.installed;
         const oauth = new OAuth2({
-            client_id: this._config.credentials.installed.client_id,
-            client_secret: this._config.credentials.installed.client_secret,
-            redirect_uri: this._config.credentials.installed.redirect_uris[0],
-            scopes: this._config.scopes,
+            client_id: creds.installed.client_id,
+            client_secret: creds.installed.client_secret,
+            redirect_uri: creds.installed.redirect_uris[0],
+            scopes: this._config.googleApis.scopes,
             callback: this._options.callback,
         }, this._token);
 
