@@ -9,8 +9,8 @@ if (process.env.MAGISTER_CALENDAR_CONFIG) {
     }
 
     module.exports = {
-        ...process.env.MAGISTER_CALENDAR_CONFIG,
-        credentials: process.env.GOOGLE_CREDENTIALS,
+        ...eval(process.env.MAGISTER_CALENDAR_CONFIG),
+        credentials: JSON.parse(process.env.GOOGLE_CREDENTIALS),
     };
 } else {
     module.exports = {
