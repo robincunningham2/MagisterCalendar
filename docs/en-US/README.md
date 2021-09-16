@@ -5,22 +5,23 @@ _Lees dit in [het Nederlands](../nl-NL/README.md)_
 ## Table of Contents
 
 * [Local](#local)
-    * [Setup](#setup)
+    * [Installation](#installation)
     * [Usage](#usage)
 
 ## Local
 
-### Setup
+### Installation
 
-1. Run the setup command:
+```bash
+#!/bin/bash
+git clone https://github.com/robincunningham2/MagisterCalendar  # Clone the repository
+cd MagisterCalendar/  # cd into the repository
+npm install && npm run setup  # Setup the repository
+```
 
-    ```bash
-    npm run setup
-    ```
+Setup [a Google OAuth application](Create-an-OAuth-Application.md).
 
-2. [Create an OAuth application](Create-an-OAuth-Application.md)
-
-3. Follow [this guide](Config-Variables.md) to configure the project.
+Setup [config variables](Config-Variables.md).
 
 ### Usage
 

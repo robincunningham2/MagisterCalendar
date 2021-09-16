@@ -100,7 +100,7 @@ class GoogleCalendar {
             client_id: this._config.credentials.installed.client_id,
             client_secret: this._config.credentials.installed.client_secret,
             redirect_uri: this._config.credentials.installed.redirect_uris[0],
-            scopes: this._config.googleApis.scopes,
+            scopes: this._config.scopes,
             callback: this._options.callback,
         }, this._token);
 
@@ -115,29 +115,29 @@ class GoogleCalendar {
     _generateEventOptions(appointment) {
         return {
             auth: this._auth,
-            calendarId: this._config.googleApis.calendarId,
+            calendarId: this._config.settings.calendar,
             resource: {
-                summary: this._config.appointments.summary(appointment),
-                location: appointment.Lokatie || this._config.appointments.defaults.location,
+                summary: this._config.functions.summary(appointment),
+                location: appointment.Lokatie || this._config.settings.defaultLocationName,
                 description: `<!--magisterId:${appointment.Id}-->` +
-                    (appointment.Inhoud || this._config.appointments.defaults.description)
+                    (appointment.Inhoud || this._config.settings.defaultDescription)
                         .split('<br>').join('\n'),
-                colorId: this._config.appointments.color(appointment),
+                colorId: this._config.functions.color(appointment),
                 start: {
-                    dateTime: new Date(Number(new Date(appointment.Start)) + 7_200_000).toISOString(),
-                    timeZone: this._config.googleApis.timeZone,
+                    dateTime: new Date(appointment.Start).toISOString(),
+                    timeZone: this._config.settings.timeZone,
                 },
                 end: {
-                    dateTime: new Date(Number(new Date(appointment.Einde)) + 7_200_000).toISOString(),
-                    timeZone: this._config.googleApis.timeZone,
+                    dateTime: new Date(appointment.Einde).toISOString(),
+                    timeZone: this._config.settings.timeZone,
                 },
-                reminders: this._config.appointments.reminders,
+                reminders: this._config.settings.reminders,
             },
         };
     }
 
     async createEvent(appointment) {
-        if (!this._config.appointments.filter(appointment)) return this;
+        if (!this._config.functions.filter(appointment)) return this;
 
         const options = this._generateEventOptions(appointment);
         await this._calendar.events.insert(options);
@@ -146,7 +146,7 @@ class GoogleCalendar {
     }
 
     async updateEvent(appointment, eventData, deleteOnReject = false) {
-        if (!this._config.appointments.filter(appointment)) {
+        if (!this._config.functions.filter(appointment)) {
             if (deleteOnReject) return await this.deleteEvent(eventData.id);
             return this;
         }
@@ -165,7 +165,7 @@ class GoogleCalendar {
 
     async deleteEvent(eventId) {
         await this._calendar.events.delete({
-            calendarId: this._config.googleApis.calendarId,
+            calendarId: this._config.settings.calendar,
             eventId,
         });
 
@@ -174,7 +174,7 @@ class GoogleCalendar {
 
     async listEvents(timeMin, timeMax) {
         const res = await this._calendar.events.list({
-            calendarId: this._config.googleApis.calendarId,
+            calendarId: this._config.settings.calendar,
             maxResults: 250,
             timeMin,
             timeMax,
@@ -204,7 +204,7 @@ class GooglePeople {
             client_id: this._config.credentials.installed.client_id,
             client_secret: this._config.credentials.installed.client_secret,
             redirect_uri: this._config.credentials.installed.redirect_uris[0],
-            scopes: this._config.googleApis.scopes,
+            scopes: this._config.scopes,
             callback: this._options.callback,
         }, this._token);
 
@@ -214,6 +214,15 @@ class GooglePeople {
 
         this._people = google.people({ version: 'v1', auth: this._auth });
         return this._token;
+    }
+
+    async me() {
+        const res = await this._people.people.get({
+            resourceName: 'people/me',
+            personFields: 'names,emailAddresses',
+        });
+
+        return res.data;
     }
 }
 
