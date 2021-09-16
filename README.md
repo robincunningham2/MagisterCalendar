@@ -7,16 +7,18 @@ Intergrate Magister (a Dutch school system) with Google Calendar. This will save
 ```bash
 git clone https://github.com/robincunningham2/MagisterCalendar.git
 cd MagisterCalendar/
-npm run setup
+npm install && npm run setup
 ```
 
 ## Documentation
 
-Read the full documentation [here](docs/en-US)
+Read the English docs [here](docs/en-US)
+
+Lees de Nederlandse documentatie [hier](docs/nl-NL)
 
 ## Usage
 
 ```bash
-npm start # Sync once
-npm run start:repeat # Sync appointments every 15 minutes
+npm start  # Sync once
+npm run start:repeat  # Sync appointments every 15 minutes
 ```
