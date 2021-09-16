@@ -89,6 +89,7 @@ class GoogleCalendar {
 
         this._options = {
             callback,
+            web,
             token,
         };
 
@@ -96,7 +97,7 @@ class GoogleCalendar {
     }
 
     async authorize() {
-        const creds = web ? this._config.credentials.web : this._config.credentials.installed;
+        const creds = this._options.web ? this._config.credentials.web : this._config.credentials.installed;
         const oauth = new OAuth2({
             client_id: creds.client_id,
             client_secret: creds.client_secret,
@@ -194,6 +195,7 @@ class GooglePeople {
 
         this._options = {
             callback,
+            web,
             token,
         };
 
@@ -201,7 +203,7 @@ class GooglePeople {
     }
 
     async authorize() {
-        const creds = web ? this._config.credentials.web : this._config.credentials.installed;
+        const creds = this._options.web ? this._config.credentials.web : this._config.credentials.installed;
         const oauth = new OAuth2({
             client_id: creds.installed.client_id,
             client_secret: creds.installed.client_secret,
