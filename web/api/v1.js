@@ -44,7 +44,7 @@ api.get('/redirectOAuth', async (req, res) => {
     }
 
     req.session.tokenFile = token;
-    res.redirect(302, '/');
+    res.redirect(302, '/signup');
 });
 
 api.use((req, res) => {
