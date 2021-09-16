@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title><%= language.title %></title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+        <link rel="stylesheet" href="/static/css/master.css">
+        <link rel="stylesheet" href="/static/css/index.css">
+    </head>
+    <body>
+        <section id="nav">
+            <div style="width: 100%; height: 55px;"></div>
+            <div class="nav">
+                <a href="signup"><button class="signup"><%= language.signup %></button></a>
+            </div>
+        </section>
+        <section id="top">
+            <div class="top-text">
+                <h1><%= language.tagline %></h1>
+                <p><%= language.tagline_description %></p>
+                <a href="signup"><button><%= language.signup %></button></a>
+            </div>
+            <div class="top-images">
+                <div class="appointment-example jwrQr"></div>
+                <div class="appointment-example ua0xv"></div>
+            </div>
+            <a href="#test">
+                <svg id="down" class="" width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd">
+                    <path d="M12 0c6.623 0 12 5.377 12 12s-5.377 12-12 12-12-5.377-12-12 5.377-12 12-12zm0 1c6.071 0 11 4.929 11 11s-4.929 11-11 11-11-4.929-11-11 4.929-11 11-11zm5.247 8l-5.247 6.44-5.263-6.44-.737.678 6 7.322 6-7.335-.753-.665z"/>
+                </svg>
+            </a>
+        </section>
+        <section id="test" style="width: 100%; height: 5000px"></section>
+        <script src="/static/js/index.js"></script>
+    </body>
+</html>
