@@ -53,7 +53,10 @@ Daarna, klik op **Save and Continue** en **Back to Dashboard**
 
 ![Schermafbeelding](../download-credentials-screenshot.png)
 
-Sla het gedownloadde bestand op in `config/credentials.json`
+Sla het gedownloadde bestand op in `config/credentials.json`.
+
+Als je een service (zoals Heroku) gebruikt waar je alleen de enviroment variablen kunt instellen, kan je de
+variabele `GOOGLE_CREDENTIALS` instellen op dit bestand.
 
 ---
 

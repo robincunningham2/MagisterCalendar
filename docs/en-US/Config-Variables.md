@@ -12,34 +12,34 @@ module.exports = {
             // Your Magister school ID. Found in the domain name of Magister. e.g.
             // abc.magister.net -> 'abc'
             schoolId: 'school_id',
-            // User ID used to login to magister
+            // Gebruikers ID om in te loggen met magister
             userId: 'user_id',
-            // Magister password matching your userId
+            // Magister wachtwoord die overeenkomt met de gebruikersnaam.
             password: 'password'
         },
-        // Calendar ID to do the magic on, use the keyword 'primary' for your main calendar
+        // Calendar ID om de magie op te doen, Gebruil 'primary' voor de standaard agenda.
         calendar: 'primary',
-        // Your local time zone. See https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+        // Jouw lokale tijdzone. Bekijk https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
         timeZone: 'Europe/Amsterdam',
-        // Default location name if Magister has none
+        // Standaard lokatie naam als Magister geen lokatie heeft
         defaultLocationName: 'Niet bekend',
-        // Default HTML description if the Magister content is empty
+        // HTML beschrijving als Magister er geen heeft
         defaultDescription: '<i>Geen inhoud</i>',
-        // Google calendar reminders. { useDefault: false } for no reminders at all
+        // Google Agenda herinneringen. { useDefault: false } for geen herinneringen
         reminders: { useDefault: false }
     },
-    scopes: [ // Google OAuth scopes matching your OAuth application:
+    scopes: [ // Google OAuth-bereiken die overeenkomen met jouw OAuth applicatie:
         'https://www.googleapis.com/auth/userinfo.profile',
         'https://www.googleapis.com/auth/user.emails.read',
         'https://www.googleapis.com/auth/calendar',
         'https://www.googleapis.com/auth/calendar.events'
     ],
     functions: {
-        // Returns a boolean to include or disinclude an appointment based on it's data
+        // Retourneert een boolean om een afspraak op te nemen of uit te sluiten op basis van de Magister gegevens
         filter: (magisterAppointment: Object) => Boolean,
-        // Generate a summary for Google Calendar. Returns a string
+        // Genereer een samenvatting voor Google Agenda. Retourneert een string
         summary: (magisterAppointment: Object) => String,
-        // Generate a color for Google Calendar. Returns a number from 1-11
+        // Genereer een kleur voor Google Agenda. Retourneert een getal van 1-11
         color: (magisterAppointment: Object) => Number
     }
 }
@@ -47,17 +47,16 @@ module.exports = {
 
 ### `magisterAppointment` Object
 
-This object passed in `functions.filter`, `functions.summary`,  and `functions.color`.
+Dit object is gebruikt in `functions.filter`, `functions.summary` en `functions.color`.
 
-The `magisterAppointment` is from the Magister API:
+De `magisterAppointment` is van de Magister API:
 
 ```js
 magisterAppointment: {
 {
     Id: 3647977,
     Links: [
-        // Links of previous, current and next appointments
-        // Note that these are not always present
+        // Links van de vorige, huidige en volgende afspraken
         {
             Rel: 'Prev',
             Href: '/api/personen/123456/afspraken/3647976'
@@ -71,55 +70,55 @@ magisterAppointment: {
             Href: '/api/personen/123456/afspraken/3647978'
         }
     ],
-    // Start of appointment
+    // Begin van een afspraak
     Start: 'yyyy-MM-dd"T"HH:mm:ss.0000000Z',
-    // End of appointment
+    // Einde van een afspraak
     Einde: 'yyyy-MM-dd"T"HH:mm:ss.0000000Z',
-    // If it is a lesson, the lesson hour will be here as a number, else null
+    // Als het een les is, staat het lesuur hier als een getal, anders null
     LesuurVan: 1,
-    // Same as LesuurVan, but the lesson hour the appointment ends
+    // Zelfde als LesuurVan, maar op het lesuur eindigt de afspraak
     LesuurTotMet: 2,
-    // Boolean indicating if the appoint is the whole day
+    // Booleaanse waarde die aangeeft of de afspraak de hele dag is
     DuurtHeleDag: false,
-    // Summary
+    // Omschrijving
     Omschrijving: 'la - KBR - VX3la_2',
-    // Location
+    // Lokatie
     Lokatie: 'D04',
-    // Appointment status. Is 4 if the lesson is cancelled. 7 for a normal lesson
+    // Afspraakstatus. Is 4 als de les niet doorgaat. 7 voor een normale les
     Status: 7,
-    // Appointment type. 13 for a normal lesson.
+    // Afspraak type. 13 voor een normale les.
     Type: 13,
-    // If the lesson is online
+    // Of de les online is
     IsOnlineDeelname: false,
-    // Honestly don't know what this is
+    // Weet eerlijk gezegd niet wat dit is
     WeergaveType: 0,
-    // Homework/information, else null
+    // Huiswerk/informatie, anders null
     Inhoud: null,
-    // Honestly don't know what this is
+    // Weet eerlijk gezegd niet wat dit is
     InfoType: 0,
-    // If you are late, skipped the class, forgot homework, etc. it will show here
+    // Als je te laat bent, gespijbeld hebt, huiswerk bent vergeten, enz., wordt dit hier weergegeven
     Aantekening: null,
-    // Set homework/information as done
+    // Stel huiswerk/informatie in als klaar
     Afgerond: false,
-    // Repeating
+    // Herhalen
     HerhaalStatus: 0,
     Herhaling: null,
-    // Subjects
+    // Vakken
     Vakken: [
         {
-            // Unique subject ID
+            // Uniek vak ID
             Id: 79,
-            // Subject name
+            // Vak name
             Naam: 'Latijnse taal en letterkunde'
         }
     ],
     Docenten: [
         {
-            // Unique teacher code
+            // Unieke docenten code
             Id: 359,
-            // Teacher name
+            // Docenten name
             Naam: 'S.D. Kolenbrander',
-            // Teacher code. Usually a 3 letter uppercase code.
+            // Docente code. Usually a 3 letter uppercase code.
             Docentcode: 'KBR'
         },
         ...
