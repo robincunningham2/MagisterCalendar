@@ -19,7 +19,7 @@ app.get('/', (_, res) => {
 app.get('/signup', (req, res) => {
     if (!req.session.tokenFile) return res.redirect(302, '/api/v1/generateAuthUrl');
     res.render('pages/signup', { token: JSON.stringify(req.session.tokenFile) });
-})
+});
 
 app.use('/api/v1', require('./api/v1'));
 
