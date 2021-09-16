@@ -1,0 +1,96 @@
+
+section#top {
+    width: 100%;
+    height: 600px;
+    background-color: #f6f6f6;
+}
+
+div.top-text {
+    position: absolute;
+    top: 115px; left: 180px;
+    width: 330px;
+
+    text-shadow: 0px 24px 38px rgb(0 0 0 / 7%),
+        0px 9px 46px rgb(0 0 0 / 6%),
+        0px 11px 15px rgb(0 0 0 / 10%);
+
+    transition: right 300ms ease;
+}
+
+div.top-text h1 {
+    font-size: 38px;
+    font-weight: 300;
+    line-height: 50px;
+}
+
+div.top-text p {
+    color: #666;
+}
+
+div.top-text button {
+    margin-top: 45px;
+}
+
+div.top-images {
+    position: absolute;
+    top: 90px; right: 42%;
+}
+
+div.appointment-example {
+    position: absolute;
+    border-radius: 8px;
+}
+
+div.appointment-example.jwrQr {
+    top: 0; left: 0;
+    height: 344.8px;
+    width: 358.4px;
+
+    background: url('/static/assets/example-appointment-1.png');
+    background-size: 100%;
+
+    box-shadow: 0px 24px 38px 3px rgb(0 0 0 / 14%),
+        0px 9px 46px 8px rgb(0 0 0 / 12%),
+        0px 11px 15px -7px rgb(0 0 0 / 20%);
+}
+
+div.appointment-example.ua0xv {
+    top: 195px; left: 90px;
+    height: 197.6px;
+    width: 358.4px;
+
+    background: url('/static/assets/example-appointment-2.png');
+    background-size: 100%;
+
+    box-shadow: 0px 24px 38px 3px rgb(0 0 0 / 10.5%),
+        0px 9px 46px 8px rgb(0 0 0 / 9%),
+        0px 11px 15px -7px rgb(0 0 0 / 15%);
+}
+
+svg#down {
+    position: absolute;
+    top: 695px; left: 50%; transform: translate(-50%, 0);
+    height: 24px;
+    width: 24px;
+    opacity: 1;
+    transition: opacity 250ms ease;
+}
+
+svg#down.hidden {
+    opacity: 0;
+}
+
+div.nav {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 55px;
+    z-index: 1;
+    background-color: white;
+    transition: box-shadow 300ms ease;
+}
+
+div.nav > a > button.signup {
+    float: right;
+    margin-right: 20px;
+    margin-top: 7px;
+}
