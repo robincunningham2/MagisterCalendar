@@ -189,6 +189,15 @@ class GooglePeople {
         this._people = google.people({ version: 'v1', auth: this._auth });
         return this._token;
     }
+
+    async me() {
+        const res = await this._people.people.get({
+            resourceName: 'people/me',
+            personFields: 'names,emailAddresses',
+        });
+
+        return res.data;
+    }
 }
 
 function DESKTOP_CALLBACK(url) {
