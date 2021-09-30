@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%- include('./partials/head'); %>
+        <title><%= error %></title>
+        <link rel="stylesheet" href="/static/css/error.css">
+    </head>
+    <body>
+        <section id="error">
+            <div class="error-body">
+                <h1><%= error %></h1>
+                <p><%= message %></p>
+            </div>
+        </section>
+    </body>
+</html>
