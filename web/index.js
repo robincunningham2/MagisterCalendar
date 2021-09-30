@@ -19,7 +19,12 @@ app.get('/', (_, res) => {
 app.get('/signup', async (req, res) => {
     if (!req.session.tokenFile) return res.redirect(302, '/api/v1/generateAuthUrl');
     const google = require('../src/googleServices');
-    const people = new google.GooglePeople(require('../config/index'), google.defaults.DESKTOP_CALLBACK, true, req.session.tokenFile);
+    const people = new google.GooglePeople(
+        require('../config/index'),
+        google.defaults.DESKTOP_CALLBACK,
+        true,
+        req.session.tokenFile
+    );
 
     await people.authorize();
     const me = await people.me();
