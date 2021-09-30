@@ -154,7 +154,10 @@ class GoogleCalendar {
         }
 
         const options = this._generateEventOptions(appointment);
-        options.resource.colorId = Math.max(1, Math.min(11, Number(eventData.colorId) || 8));
+        options.resource.colorId = !!Number(eventData.colorId) ?
+            Math.max(1, Math.min(11, Number(eventData.colorId))) :
+            undefined;
+
         options.resource.reminders = eventData.reminders || { useDefault: false };
 
         await this._calendar.events.update({
