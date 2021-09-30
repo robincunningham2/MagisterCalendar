@@ -23,7 +23,7 @@ app.get('/signup', async (req, res) => {
         require('../config/index'),
         google.defaults.DESKTOP_CALLBACK,
         true,
-        req.session.tokenFile
+        req.session.tokenFile,
     );
 
     await people.authorize();
