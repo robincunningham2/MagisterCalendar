@@ -7,12 +7,6 @@ div.error-body {
     position: absolute;
     top: 115px; left: 180px;
     width: 330px;
-
-    text-shadow: 0px 24px 38px rgb(0 0 0 / 7%),
-        0px 9px 46px rgb(0 0 0 / 6%),
-        0px 11px 15px rgb(0 0 0 / 10%);
-
-    transition: right 300ms ease;
 }
 
 div.error-body h1 {
