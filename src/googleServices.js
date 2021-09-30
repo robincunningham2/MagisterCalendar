@@ -102,7 +102,7 @@ class GoogleCalendar {
             client_id: creds.client_id,
             client_secret: creds.client_secret,
             redirect_uri: creds.redirect_uris[0],
-            scopes: this._config.googleApis.scopes,
+            scopes: this._config.scopes,
             callback: this._options.callback,
         }, this._token);
 
