@@ -9,7 +9,7 @@ const google = require('./googleServices');
 let token = null;
 if (fs.existsSync(path.join(process.cwd(), '.tmp/token.json'))) token = require('../.tmp/token.json');
 
-const calendar = new google.GoogleCalendar(config, google.defaults.DESKTOP_CALLBACK, token);
+const calendar = new google.GoogleCalendar(config, google.defaults.DESKTOP_CALLBACK, false, token);
 const magister = new Magister(config.settings.magister);
 
 Promise.all([
