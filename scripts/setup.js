@@ -75,16 +75,13 @@ const config = {
     config.settings.magister.userId = await question('Enter your magister user ID');
     config.settings.magister.password = await question('Enter your magister password', { password: true });
 
-    config.settings.calendar = await question('Select a calendar', { password: true, default: 'primary' });
-    config.settings.timeZone = await question('Set a timezone', { password: true, default: 'Europe/Amsterdam' });
-    config.settings.defaultLocationName = await question('Default location tag', {
-        password: true,
-        default: 'Niet bekend',
-    });
+    config.settings.calendar = await question('Select a calendar', { default: 'primary' });
+    config.settings.timeZone = await question('Set a timezone', { default: 'Europe/Amsterdam' });
+    config.settings.defaultLocationName = await question('Default location tag', { default: 'Niet bekend' });
 
     config.settings.defaultDescription = await question(
         'Default description (allows HTML)',
-        { password: true, default: '<i>Geen inhoud</i>' },
+        { default: '<i>Geen inhoud</i>' }
     );
 
     let saveAs;
