@@ -8,7 +8,7 @@ const OAUTH_OPTIONS = {
     client_id: config.credentials.web.client_id,
     client_secret: config.credentials.web.client_secret,
     redirect_uri: config.credentials.web.redirect_uris[0],
-    scopes: config.googleApis.scopes,
+    scopes: config.scopes,
 };
 
 api.get('/endpoints', (_, res) => {
