@@ -15,7 +15,7 @@ rl._writeToOutput = (string) => {
 };
 
 function question(query, options = { password: false, default: null }) {
-    query = `${chalk.keyword('orange')('?')} ${chalk.bold(`${query}:`)} `;
+    query = `${chalk.keyword('pink')('?')} ${chalk.bold(`${query}:`)} `;
     if (options.default) query += `(${options.default}) `;
 
     return new Promise((resolve) => {
@@ -25,7 +25,7 @@ function question(query, options = { password: false, default: null }) {
             if (options.default) answer ||= options.default;
 
             let output = '\033[F' + chalk.green('✔');
-            if (!options.password) output += query.slice(18) + chalk.keyword('orange')(answer);
+            if (!options.password) output += query.slice(20) + chalk.keyword('pink')(answer);
             rl.output.write(output + '\n');
 
             resolve(answer);
