@@ -10,13 +10,25 @@ let token = null;
 if (fs.existsSync(path.join(process.cwd(), '.tmp/token.json'))) token = require('../.tmp/token.json');
 
 const calendar = new google.GoogleCalendar(config, google.defaults.DESKTOP_CALLBACK, token);
+const people =  new google.GooglePeople(config, google.defaults.DESKTOP_CALLBACK, token);
 const magister = new Magister(config.settings.magister);
+
+const allowLogs = !process.argv.includes('--silent');
 
 Promise.all([
     calendar.authorize(),
+    people.authorize(),
     magister.login(),
 ]).then(async (result) => {
     const now = new Date;
+    const me = await people.me();
+
+    if (allowLogs) {
+        console.log(`Authorized at ${now}`);
+        console.log(`Hello, ${me.names[0].displayName}`);
+    }
+
+    let stats = { created: 0, updated: 0, removed: 0 };
 
     token = result[0];
     fs.writeFileSync(path.join(process.cwd(), '.tmp/token.json'), JSON.stringify(token));
@@ -46,7 +58,10 @@ Promise.all([
     for (let i = 0; i < res.Items.length; i++) {
         try {
             const item = res.Items[i];
-            if (!existing[String(item.Id)]) await calendar.createEvent(item);
+            if (!existing[String(item.Id)]) {
+                await calendar.createEvent(item);
+                stats.created++;
+            }
         } finally {}
     }
 
@@ -55,11 +70,18 @@ Promise.all([
             try {
                 const appointment = await magister.get(`/personen/${magister.me.Id}/afspraken/${id}`);
                 await calendar.updateEvent(appointment, existing[id], true);
+                stats.updated++;
             } catch {
                 try {
                     await calendar.deleteEvent(existing[id].id);
+                    stats.removed++;
                 } finally {}
             }
         }
+    }
+
+    if (allowLogs) {
+        console.log(`Created ${stats.created} events, edited ${stats.updated}, and removed ${stats.removed}`);
+        console.log(`Finished in ${Math.round((Number(new Date) - Number(now)) / 100) / 10} s`);
     }
 });
