@@ -146,12 +146,12 @@ class GoogleCalendar {
         return this;
     }
 
-    async listEvents(timeMin, timeMax) {
+    async listEvents(from, to) {
         const res = await this._calendar.events.list({
             calendarId: this._config.settings.calendar,
             maxResults: 250,
-            timeMin,
-            timeMax,
+            timeMin: from.toISOString(),
+            timeMax: to.toISOString(),
         });
 
         return res.data.items || [];

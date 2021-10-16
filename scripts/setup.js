@@ -116,7 +116,7 @@ const config = {
     if (!fs.existsSync('config/credentials.json')) {
         console.log(
             'Error: No file was found at config/credentials.json.\nTo complete the setup, follow this guide: https:/' +
-            '/github.com/robincunningham2/MagisterCalendar/blob/master/docs/en-US/Create-an-OAuth-Application.md'
+            '/github.com/robincunningham2/MagisterCalendar/blob/master/docs/en-US/Create-an-OAuth-Application.md',
         );
     }
 

@@ -34,8 +34,8 @@ Promise.all([
     fs.writeFileSync(path.join(process.cwd(), '.tmp/token.json'), JSON.stringify(token));
 
     const items = await calendar.listEvents(
-        new Date(new Date(Number(now) - 172_800_000).toISOString().split('T')[0]).toISOString(),
-        new Date(new Date(Number(now) + (15 - now.getDay()) * 86_400_000).toISOString().split('T')[0]).toISOString(),
+        new Date(new Date(Number(now) - 172_800_000).toISOString().split('T')[0]),
+        new Date(new Date(Number(now) + (15 - now.getDay()) * 86_400_000).toISOString().split('T')[0]),
     );
 
     const existing = {};
