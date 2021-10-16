@@ -98,13 +98,18 @@ class GoogleCalendar {
 
     async authorize() {
         const creds = this._options.web ? this._config.credentials.web : this._config.credentials.installed;
-        const oauth = new OAuth2({
-            client_id: creds.client_id,
-            client_secret: creds.client_secret,
-            redirect_uri: creds.redirect_uris[0],
-            scopes: this._config.scopes,
-            callback: this._options.callback,
-        }, this._token);
+
+        let oauth;
+        if (this._token instanceof OAuth2) oauth = this._token;
+        else {
+            oauth = new OAuth2({
+                client_id: creds.client_id,
+                client_secret: creds.client_secret,
+                redirect_uri: creds.redirect_uris[0],
+                scopes: this._config.scopes,
+                callback: this._options.callback,
+            }, this._token);
+        }
 
         await oauth.authorize();
         this._auth = oauth.auth;
@@ -154,10 +159,7 @@ class GoogleCalendar {
         }
 
         const options = this._generateEventOptions(appointment);
-        options.resource.colorId = !!Number(eventData.colorId) ?
-            Math.max(1, Math.min(11, Number(eventData.colorId))) :
-            undefined;
-
+        options.resource.colorId = eventData.colorId;
         options.resource.reminders = eventData.reminders || { useDefault: false };
 
         await this._calendar.events.update({
@@ -177,12 +179,12 @@ class GoogleCalendar {
         return this;
     }
 
-    async listEvents(timeMin, timeMax) {
+    async listEvents(from, to) {
         const res = await this._calendar.events.list({
             calendarId: this._config.settings.calendar,
             maxResults: 250,
-            timeMin,
-            timeMax,
+            timeMin: from.toISOString(),
+            timeMax: to.toISOString(),
         });
 
         return res.data.items || [];
@@ -207,13 +209,18 @@ class GooglePeople {
 
     async authorize() {
         const creds = this._options.web ? this._config.credentials.web : this._config.credentials.installed;
-        const oauth = new OAuth2({
-            client_id: creds.client_id,
-            client_secret: creds.client_secret,
-            redirect_uri: creds.redirect_uris[0],
-            scopes: this._config.scopes,
-            callback: this._options.callback,
-        }, this._token);
+
+        let oauth;
+        if (this._token instanceof OAuth2) oauth = this._token;
+        else {
+            oauth = new OAuth2({
+                client_id: creds.client_id,
+                client_secret: creds.client_secret,
+                redirect_uri: creds.redirect_uris[0],
+                scopes: this._config.scopes,
+                callback: this._options.callback,
+            }, this._token);
+        }
 
         await oauth.authorize();
         this._auth = oauth.auth;

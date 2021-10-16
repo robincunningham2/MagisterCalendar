@@ -1,20 +1,24 @@
-# VSCode
+# VSCode configuration
 .vscode/
 
-# MacOS
+# Stupid MacOS files
 .DS_Store
 
-# Node dependencies
+# Dependencies
 node_modules/
 
-# Enviroment specific
-env
+# Environment specific
 .env
-*.env
+.env.test
+env/
 
-# Temp files
-.tmp/
+# Cache files
+.cache/
 
-# Credentials
+# Configuration files
 config/
 !config/index.js
+.magistercalendarrc.*
+
+# Logs
+*.log

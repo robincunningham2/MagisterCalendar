@@ -1,16 +1,20 @@
 {
   "name": "magistercalendar",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "description": "Intergrate Magister with Google Calendar.",
   "main": "src/app.js",
   "scripts": {
-    "start": "node src/app",
-    "start:repeat": "while true; do node . && node -e 'process.stdout.clearLine();process.stdout.cursorTo(0);process.stdout.write(`Updated at ${new Date().toLocaleString(\"nl-NL\")}`);' && sleep 900; done",
+    "start": "node .",
+    "start:silent": "node . --silent",
+    "start:repeat": "while true; do node . --silent && node -e 'process.stdout.clearLine();process.stdout.cursorTo(0);process.stdout.write(`Updated at ${new Date().toLocaleString(\"nl-NL\")}`);' && sleep 900; done",
+    "web": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "setup": "mkdir .tmp/ || true",
+    "init": "node scripts/setup.js",
+    "setup": "echo '\\x1B[38;2;255;165;0m[WARNING]\\x1B[39m \\x1B[90msetup is deprecated, use init instead\\x1B[39m\\n' && node scripts/setup.js",
+    "authorize": "node scripts/authorize.js",
     "bump": "node scripts/bump.js",
     "lint": "./node_modules/.bin/eslint .",
-    "web": "node server.js"
+    "lint:fix": "./node_modules/.bin/eslint . --fix"
   },
   "repository": {
     "type": "git",
@@ -24,6 +28,7 @@
   "homepage": "https://github.com/robincunningham2/MagisterCalendar#readme",
   "dependencies": {
     "cookie-session": "^1.4.0",
+    "chalk": "^4.1.2",
     "dotenv": "^10.0.0",
     "ejs": "^3.1.6",
     "express": "^4.17.1",
