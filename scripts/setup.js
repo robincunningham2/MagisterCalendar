@@ -3,7 +3,7 @@ const readline = require('readline');
 const chalk = require('chalk');
 const fs = require('fs');
 
-fs.mkdirSync('.tmp/');
+if (!fs.existsSync('.tmp/')) fs.mkdirSync('.tmp/');
 
 const rl = readline.createInterface({
     input: process.stdin,
@@ -66,7 +66,7 @@ const config = {
                 return $.Inhoud;
             }
         },
-        color: ($) => undefined,
+        color: () => undefined,
     },
 };
 
