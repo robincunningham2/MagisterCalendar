@@ -62,7 +62,7 @@ const config = {
                 string = `#${$.LesuurVan} `;
                 string += $.Vakken[0].Naam[0].toUpperCase() + $.Vakken[0].Naam.slice(1);
                 string += ` - ${$.Docenten[0].Docentcode}`;
-            } else string =  $.Omschrijving;
+            } else string = $.Omschrijving;
 
             if ($.InfoType == 2) string += ' (proefwerk)';
             else if ($.Inhoud) string += ' (huiswerk)';
