@@ -57,14 +57,17 @@ const config = {
     functions: {
         filter: ($) => $.Status != 4,
         summary: ($) => {
+            let string = '';
             if ($.LesuurVan) {
-                let string = `#${$.LesuurVan} `;
+                string = `#${$.LesuurVan} `;
                 string += $.Vakken[0].Naam[0].toUpperCase() + $.Vakken[0].Naam.slice(1);
                 string += ` - ${$.Docenten[0].Docentcode}`;
-                return string;
-            }
+            } else string =  $.Omschrijving;
 
-            return $.Omschrijving;
+            if ($.InfoType == 2) string += ' (proefwerk)';
+            else if ($.Inhoud) string += ' (huiswerk)';
+
+            return string;
         },
         color: () => undefined,
     },
