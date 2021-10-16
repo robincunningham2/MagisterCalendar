@@ -16,12 +16,14 @@ Promise.all([
     calendar.authorize(),
     magister.login(),
 ]).then(async (result) => {
+    const now = new Date;
+
     token = result[0];
     fs.writeFileSync(path.join(process.cwd(), '.tmp/token.json'), JSON.stringify(token));
 
     const items = await calendar.listEvents(
-        new Date(Number(new Date) - 86_400_000).toISOString(),
-        new Date(Number(new Date) + 604_800_000).toISOString(),
+        new Date(new Date(Number(now) - 172_800_000).toISOString().split('T')[0]).toISOString(),
+        new Date(new Date(Number(now) + (15 - now.getDay()) * 86_400_000).toISOString().split('T')[0]).toISOString(),
     );
 
     const existing = {};
@@ -37,7 +39,10 @@ Promise.all([
         if (id) existing[id] = item;
     });
 
-    const res = await magister.get(`/personen/${magister.me.Id}/afspraken`);
+    const from = new Date(Number(now) - 172_800_000).toISOString().split('T')[0];
+    const to = new Date(Number(now) + (14 - now.getDay()) * 86_400_000).toISOString().split('T')[0];
+
+    const res = await magister.get(`/personen/${magister.me.Id}/afspraken?tot=${to}&van=${from}`);
     for (let i = 0; i < res.Items.length; i++) {
         try {
             const item = res.Items[i];
