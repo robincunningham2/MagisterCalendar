@@ -22,7 +22,7 @@ if (!process.env.MAGISTER_CALENDAR_CONFIG) {
 
     module.exports = {
         ...config,
-        credentials: JSON.parse(process.env.GOOGLE_CREDENTIALS),
+        credentials: require('./credentials.json'),
     };
 } else {
     if (!process.env.GOOGLE_CREDENTIALS) {
