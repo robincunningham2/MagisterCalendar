@@ -62,9 +62,9 @@ const config = {
                 string += $.Vakken[0].Naam[0].toUpperCase() + $.Vakken[0].Naam.slice(1);
                 string += ` - ${$.Docenten[0].Docentcode}`;
                 return string;
-            } else {
-                return $.Inhoud;
             }
+
+            return $.Omschrijving;
         },
         color: () => undefined,
     },
