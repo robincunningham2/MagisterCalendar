@@ -10,7 +10,8 @@
     "setup": "mkdir .tmp/ || true",
     "bump": "node scripts/bump.js",
     "init": "node scripts/setup.js",
-    "lint": "./node_modules/.bin/eslint ."
+    "lint": "./node_modules/.bin/eslint .",
+    "lint-fix": "./node_modules/.bin/eslint . --fix"
   },
   "repository": {
     "type": "git",

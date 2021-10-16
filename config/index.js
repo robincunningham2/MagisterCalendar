@@ -5,7 +5,7 @@ dotenv.config();
 
 if (!process.env.MAGISTER_CALENDAR_CONFIG) {
     let config;
-    const dir = __dirname.split('/').filter(x => !!x.length);
+    const dir = __dirname.split('/').filter((x) => !!x.length);
     for (let i = 0; i < dir.length; i++) {
         if (fs.existsSync(`/${dir.slice(0, i).join('/')}/.magistercalendarrc.js`)) {
             config = require(`/${dir.slice(0, i).join('/')}/.magistercalendarrc.js`);
