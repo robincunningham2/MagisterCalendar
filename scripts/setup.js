@@ -81,7 +81,7 @@ const config = {
 
     config.settings.defaultDescription = await question(
         'Default description (allows HTML)',
-        { default: '<i>Geen inhoud</i>' }
+        { default: '<i>Geen inhoud</i>' },
     );
 
     let saveAs;
