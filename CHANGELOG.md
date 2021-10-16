@@ -1,5 +1,5 @@
 ## [0.0.4](https://github.com/robincunningham2/MagisterCalendar/releases/tag/0.0.4) (Latest)
-Released on `16 Sep 2021`
+Released on `16 Oct 2021`
 
 - Improved and quicker authorization.
 - `init` command.
