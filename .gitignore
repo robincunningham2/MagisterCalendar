@@ -15,6 +15,7 @@ env
 # Temp files
 .tmp/
 
-# Credentials
+# Configuration
 config/
 !config/index.js
+.magistercalendarrc.*
