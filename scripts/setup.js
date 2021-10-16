@@ -3,8 +3,6 @@ const readline = require('readline');
 const chalk = require('chalk');
 const fs = require('fs');
 
-if (!fs.existsSync('.tmp/')) fs.mkdirSync('.tmp/');
-
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,

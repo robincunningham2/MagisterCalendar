@@ -1,13 +1,12 @@
 const config = require('../config/index');
 
 const fs = require('fs');
-const path = require('path');
 
 const { Magister } = require('./magister');
 const google = require('./googleServices');
 
 let token = null;
-if (fs.existsSync(path.join(process.cwd(), '.tmp/token.json'))) token = require('../.tmp/token.json');
+if (fs.existsSync('.cache/token.json')) token = require('../.cache/token.json');
 
 const calendar = new google.GoogleCalendar(config, google.defaults.DESKTOP_CALLBACK, token);
 const people = new google.GooglePeople(config, google.defaults.DESKTOP_CALLBACK, token);
@@ -31,7 +30,9 @@ Promise.all([
     const stats = { created: 0, updated: 0, removed: 0 };
 
     token = result[0];
-    fs.writeFileSync(path.join(process.cwd(), '.tmp/token.json'), JSON.stringify(token));
+
+    if (!fs.existsSync('.cache/')) fs.mkdirSync('.cache/');
+    fs.writeFileSync('.cache/token.json', JSON.stringify(token));
 
     const items = await calendar.listEvents(
         new Date(new Date(Number(now) - 172_800_000).toISOString().split('T')[0]),
