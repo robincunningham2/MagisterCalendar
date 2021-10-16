@@ -10,7 +10,7 @@ let token = null;
 if (fs.existsSync(path.join(process.cwd(), '.tmp/token.json'))) token = require('../.tmp/token.json');
 
 const calendar = new google.GoogleCalendar(config, google.defaults.DESKTOP_CALLBACK, token);
-const people =  new google.GooglePeople(config, google.defaults.DESKTOP_CALLBACK, token);
+const people = new google.GooglePeople(config, google.defaults.DESKTOP_CALLBACK, token);
 const magister = new Magister(config.settings.magister);
 
 const allowLogs = !process.argv.includes('--silent');
@@ -28,7 +28,7 @@ Promise.all([
         console.log(`Hello, ${me.names[0].displayName}`);
     }
 
-    let stats = { created: 0, updated: 0, removed: 0 };
+    const stats = { created: 0, updated: 0, removed: 0 };
 
     token = result[0];
     fs.writeFileSync(path.join(process.cwd(), '.tmp/token.json'), JSON.stringify(token));
