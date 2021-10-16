@@ -28,7 +28,7 @@ Promise.all([
     const calendar = new google.GoogleCalendar(config, google.defaults.DESKTOP_CALLBACK, auth);
     const people = new google.GooglePeople(config, google.defaults.DESKTOP_CALLBACK, auth);
 
-    [token] = await Promise.all([ calendar.authorize(), people.authorize() ]);
+    [ token ] = await Promise.all([ calendar.authorize(), people.authorize() ]);
     const me = await people.me();
 
     const now = new Date;
@@ -88,7 +88,7 @@ Promise.all([
                 }
             }
         }
-    } catch(err) {
+    } catch (err) {
         console.error('\nError: ' + err.message);
         if (err.message == 'Insufficient Permission') {
             console.error('The application doesn\'t have the required permission, please delete the cache and rerun');
@@ -96,8 +96,8 @@ Promise.all([
 
         if (err.response) {
             filename = `magistercalendar-error-stack-${process.pid}.log`;
-            fs.writeFileSync(filename, `${err.stack}\n\nResponse (${err.response.status} ${err.response.statusText}):\n` +
-                JSON.stringify(err.response, null, 2) + '\n');
+            fs.writeFileSync(filename, `${err.stack}\n\nResponse (${err.response.status} ${err.response.statusText})` +
+                `:\n${JSON.stringify(err.response, null, 2)}\n`);
             console.error(`Saved error details to ${filename}`);
         }
 
