@@ -70,13 +70,17 @@ class GoogleCalendar {
     }
 
     async authorize() {
-        const oauth = new OAuth2({
-            client_id: this._config.credentials.installed.client_id,
-            client_secret: this._config.credentials.installed.client_secret,
-            redirect_uri: this._config.credentials.installed.redirect_uris[0],
-            scopes: this._config.scopes,
-            callback: this._options.callback,
-        }, this._token);
+        let oauth;
+        if (this._token instanceof OAuth2) oauth = this._token;
+        else {
+            oauth = new OAuth2({
+                client_id: this._config.credentials.installed.client_id,
+                client_secret: this._config.credentials.installed.client_secret,
+                redirect_uri: this._config.credentials.installed.redirect_uris[0],
+                scopes: this._config.scopes,
+                callback: this._options.callback,
+            }, this._token);
+        }
 
         const auth = await oauth.auth;
         this._auth = auth.auth;
@@ -174,13 +178,17 @@ class GooglePeople {
     }
 
     async authorize() {
-        const oauth = new OAuth2({
-            client_id: this._config.credentials.installed.client_id,
-            client_secret: this._config.credentials.installed.client_secret,
-            redirect_uri: this._config.credentials.installed.redirect_uris[0],
-            scopes: this._config.scopes,
-            callback: this._options.callback,
-        }, this._token);
+        let oauth;
+        if (this._token instanceof OAuth2) oauth = this._token;
+        else {
+            oauth = new OAuth2({
+                client_id: this._config.credentials.installed.client_id,
+                client_secret: this._config.credentials.installed.client_secret,
+                redirect_uri: this._config.credentials.installed.redirect_uris[0],
+                scopes: this._config.scopes,
+                callback: this._options.callback,
+            }, this._token);
+        }
 
         const auth = await oauth.auth;
         this._auth = auth.auth;

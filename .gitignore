@@ -19,3 +19,6 @@ env/
 config/
 !config/index.js
 .magistercalendarrc.*
+
+# Logs
+*.log
