@@ -1,5 +1,7 @@
 # Magister Calendar
 
+### ⚠️ This project is discontinued, since Magister now has their own implementation of this
+
 Intergrate Magister (a Dutch school system) with Google Calendar. This will save all your appointments from Magister to your Google Calendar.
 
 ## Installation
